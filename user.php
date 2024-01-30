@@ -2,10 +2,19 @@
 require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
+check_privilege();
+//get role list
 $roleSql = "SELECT * FROM roles";
 $rolePdo = $pdo->prepare($roleSql);
 $rolePdo->execute();
 $roles = $rolePdo->fetchAll(PDO::FETCH_OBJ);
+//get user info to edit
+if ($_GET['id']) {
+  $ufSql = "SELECT * FROM users WHERE id=" . $_GET['id'];
+  $ufPdo = $pdo->prepare($ufSql);
+  $ufPdo->execute();
+  $userinfo = $ufPdo->fetchObject();
+}
 ?>
 
 <?php require 'header.php'; ?>
@@ -18,29 +27,34 @@ $roles = $rolePdo->fetchAll(PDO::FETCH_OBJ);
       <div class="row">
         <!-- user edit form-->
         <div class="col-md-4 mt-3">
-          <form action="">
+          <form action="/_actions/user_add_update.php" method="post">
+            <input type="hidden" name="id" value="<?= $userinfo->id ?>">
             <div class='from-group'>
               <label>Name</label>
-              <input type="text" class='form-control'>
+              <input type="text" name="name" class='form-control' value="<?= $userinfo->name ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>LoginID</label>
-              <input type="text" class='form-control'>
+              <input type="text" name="login_id" class='form-control' value="<?= $userinfo->login_id ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Password</label>
-              <input type="text" class='form-control'>
+              <input type="text" name="password" class='form-control' value="<?= $userinfo->password ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Role</label>
-              <select name="role" id="" class="form-control">
+              <select name="role_id" id="" class="form-control">
                 <?php foreach ($roles as $role) : ?>
-                  <option value="<?= $role->id ?>"><?= $role->name ?></option>
+                  <option value="<?= $role->id ?>" <?php if ($role->id == $userinfo->id) {
+                                                      echo 'selected';
+                                                    } ?>>
+                    <?= $role->name ?>
+                  </option>
                 <?php endforeach; ?>
               </select>
             </div>
             <div class='btn-group float-right mt-3'>
-              <button class='btn btn-warning'>Clear</button>
+              <a class='btn btn-warning' href="user.php">Clear</a>
               <button class='btn btn-primary'>Save</button>
             </div>
           </form>
@@ -75,12 +89,12 @@ $roles = $rolePdo->fetchAll(PDO::FETCH_OBJ);
                   <td><?= $user->password ?></td>
                   <td><?= $user->rname ?></td>
                   <td>
-                    <a href="">
+                    <a href="user.php?id=<?= $user->id ?>">
                       <i class='fa fa-edit'></i>
                     </a>
                   </td>
                   <td>
-                    <a href="">
+                    <a href="_actions/user_delete.php?id=<?= $user->id ?>" onclick="return confirm('Are you sure to delete this user!')">
                       <i class='fa fa-trash'></i>
                     </a>
                   </td>

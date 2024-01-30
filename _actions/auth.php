@@ -12,3 +12,10 @@
             header('Location: /index.php');
         }
     }
+
+    function check_privilege()
+    {
+        if ($_SESSION['user_role']!=1) {
+            header('Location: /index.php');
+        }
+    }

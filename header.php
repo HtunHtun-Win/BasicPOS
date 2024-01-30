@@ -175,12 +175,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
 
             <!-- User -->
-            <li class="nav-item">
-              <a href="user.php" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>User Control</p>
-              </a>
-            </li>
+            <?php if($_SESSION['user_role']==1): ?>
+              <li class="nav-item">
+                <a href="user.php" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>User Control</p>
+                </a>
+              </li>
+            <?php endif ?>
 
             <!-- exit -->
             <li class="nav-item">
