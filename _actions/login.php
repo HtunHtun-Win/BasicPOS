@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	require '../config/config.php';
 
 	if ($_POST) {
@@ -10,7 +11,6 @@
 		$user = $pdostatement->fetchObject();
 		if($user){
 			if($user->password == $password){
-				session_start();
 				$_SESSION['user_id'] = $user->id;
 				$_SESSION['user_name'] = $user->name;
 				$_SESSION['user_role'] = $user->role;
