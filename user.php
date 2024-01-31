@@ -94,9 +94,11 @@ if ($_GET['id']) {
                     </a>
                   </td>
                   <td>
+                    <?php if($_SESSION['user_id']!=$user->id): ?>
                     <a href="_actions/user_delete.php?id=<?= $user->id ?>" onclick="return confirm('Are you sure to delete this user!')">
                       <i class='fa fa-trash'></i>
                     </a>
+                    <?php endif; ?>
                   </td>
                 </tr>
               <?php endforeach; ?>

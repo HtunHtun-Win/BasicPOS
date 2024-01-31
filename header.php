@@ -50,7 +50,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="#" class="brand-link">
+      <a href="/home.php" class="brand-link">
         <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BasicPOS</span>
       </a>
@@ -62,46 +62,50 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Sale -->
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-cart-shopping"></i>
-                <p>
-                  Sale
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Sale</a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Sale Vouchers</a>
-                </li>
-              </ul>
-            </li>
+            <?php if ($_SESSION['user_role'] != 3) : ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-cart-shopping"></i>
+                  <p>
+                    Sale
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Sale</a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Sale Vouchers</a>
+                  </li>
+                </ul>
+              </li>
+            <?php endif; ?>
 
             <!-- Purchase -->
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-sack-dollar"></i>
-                <p>
-                  Purchase
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Purchase</a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Purchase Vouchers</a>
-                </li>
-              </ul>
-            </li>
+            <?php if ($_SESSION['user_role'] != 2) : ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-sack-dollar"></i>
+                  <p>
+                    Purchase
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Purchase</a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Purchase Vouchers</a>
+                  </li>
+                </ul>
+              </li>
+            <?php endif ?>
 
             <!-- Inventory -->
             <li class="nav-item">
@@ -117,16 +121,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <a href="#" class="nav-link">Inventory List</a>
                 </li>
               </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Stock Adjustment</a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Categories</a>
-                </li>
-              </ul>
+              <?php if ($_SESSION['user_role'] == 1) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Stock Adjustment</a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Categories</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
             </li>
 
             <!-- Contact -->
@@ -138,25 +144,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Customer</a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Supplier</a>
-                </li>
-              </ul>
+              <?php if ($_SESSION['user_role'] != 3) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Customer</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
+              <?php if ($_SESSION['user_role'] != 2) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Supplier</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
             </li>
 
             <!-- income and expense -->
-            <li class="nav-item">
-              <a href="/_actions/logout.php" class="nav-link">
-                <i class="nav-icon fas fa-money-check-dollar"></i>
-                <p>Income & Expanse</p>
-              </a>
-            </li>
+            <?php if ($_SESSION['user_role'] == 1) : ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-money-check-dollar"></i>
+                  <p>Income & Expanse</p>
+                </a>
+              </li>
+            <?php endif; ?>
 
             <!-- Reports -->
             <li class="nav-item">
@@ -167,15 +179,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">Sale Reports</a>
-                </li>
-              </ul>
+              <?php if ($_SESSION['user_role'] != 3) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Sale Reports</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
+              <?php if ($_SESSION['user_role'] != 2) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Purchase Reports</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
+              <?php if ($_SESSION['user_role'] == 1) : ?>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Inventory Reports</a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">Financial Reports</a>
+                  </li>
+                </ul>
+              <?php endif; ?>
             </li>
 
             <!-- User -->
-            <?php if($_SESSION['user_role']==1): ?>
+            <?php if ($_SESSION['user_role'] == 1) : ?>
               <li class="nav-item">
                 <a href="user.php" class="nav-link">
                   <i class="nav-icon fas fa-users"></i>
