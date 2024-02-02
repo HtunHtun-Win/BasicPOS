@@ -5,19 +5,9 @@
 
     if($_POST){
         $name = $_POST['name'];
-        $login_id = $_POST['login_id'];
-        $password = $_POST['password'];
-        $role = $_POST['role_id']>3 ? 2 : $_POST['role_id'];
-        if(!$_POST['id']) {//check duplicate login_id
-            $chkSql = "SELECT * FROM users where login_id=:login_id";
-            $chkPdo = $pdo->prepare($chkSql);
-            $chkPdo->execute([':login_id'=>$login_id]);
-            $result = $chkPdo->fetchObject();
-            if($result){
-                echo "exits user";
-                $_SESSION['msg'] = "msg";
-                header('Location: ../user.php');
-            }else {//Inset new user
+        $description = $_POST['description'];
+        if(!$_POST['id']) {
+                //Inset new category
                 $addsql = "INSERT INTO users(name,login_id,password,role_id) VALUES(:name,:login_id,:password,:role_id)";
                 $addPdo = $pdo->prepare($addsql);
                 $addPdo->execute([
@@ -27,7 +17,6 @@
                     ':role_id' => $role,
                 ]);
                 header('Location: ../user.php');
-            }
         }else{
             $id = $_POST['id'];
             $updatesql = "UPDATE users SET name=:name,login_id=:login_id,password=:password,role_id=:role_id WHERE id=:id";

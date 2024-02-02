@@ -129,7 +129,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Categories</a>
+                    <a href="/category.php" class="nav-link">Categories</a>
                   </li>
                 </ul>
               <?php endif; ?>

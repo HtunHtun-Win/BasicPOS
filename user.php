@@ -27,6 +27,15 @@ if ($_GET['id']) {
       <div class="row">
         <!-- user edit form-->
         <div class="col-md-4 mt-3">
+          <?php if ($_SESSION['msg']) : ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Operation fails!</strong> LoginID can't duplicate!
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          <?php endif;
+          unset($_SESSION['msg']); ?>
           <form action="/_actions/user_add_update.php" method="post">
             <input type="hidden" name="id" value="<?= $userinfo->id ?>">
             <div class='from-group'>
@@ -54,7 +63,7 @@ if ($_GET['id']) {
               </select>
             </div>
             <div class='btn-group float-right mt-3'>
-              <a class='btn btn-warning' href="user.php">Clear</a>
+              <button type="reset" class='btn btn-warning' href="user.php">Clear</button>
               <button class='btn btn-primary'>Save</button>
             </div>
           </form>
@@ -94,10 +103,10 @@ if ($_GET['id']) {
                     </a>
                   </td>
                   <td>
-                    <?php if($_SESSION['user_id']!=$user->id): ?>
-                    <a href="_actions/user_delete.php?id=<?= $user->id ?>" onclick="return confirm('Are you sure to delete this user!')">
-                      <i class='fa fa-trash'></i>
-                    </a>
+                    <?php if ($_SESSION['user_id'] != $user->id) : ?>
+                      <a href="_actions/user_delete.php?id=<?= $user->id ?>" onclick="return confirm('Are you sure to delete this user!')">
+                        <i class='fa fa-trash'></i>
+                      </a>
                     <?php endif; ?>
                   </td>
                 </tr>
