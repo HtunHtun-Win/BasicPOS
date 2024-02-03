@@ -36,23 +36,23 @@ if ($_GET['id']) {
             </div>
           <?php endif;
           unset($_SESSION['msg']); ?>
-          <form action="/_actions/user_add_update.php" method="post">
-            <input type="hidden" name="id" value="<?= $userinfo->id ?>">
+          <form method="post" id="myForm">
+            <input type="hidden" name="id" id="input_id" value="<?= $userinfo->id ?>">
             <div class='from-group'>
               <label>Name</label>
-              <input type="text" name="name" class='form-control' value="<?= $userinfo->name ?>" required>
+              <input type="text" name="name" id="input_name" class='form-control' value="<?= $userinfo->name ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>LoginID</label>
-              <input type="text" name="login_id" class='form-control' value="<?= $userinfo->login_id ?>" required>
+              <input type="text" name="login_id" id="input_login_id" class='form-control' value="<?= $userinfo->login_id ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Password</label>
-              <input type="text" name="password" class='form-control' value="<?= $userinfo->password ?>" required>
+              <input type="text" name="password" id="input_password" class='form-control' value="<?= $userinfo->password ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Role</label>
-              <select name="role_id" id="" class="form-control">
+              <select name="role_id" id="input_role_id" class="form-control">
                 <?php foreach ($roles as $role) : ?>
                   <option value="<?= $role->id ?>" <?php if ($role->id == $userinfo->id) {
                                                       echo 'selected';
@@ -63,56 +63,14 @@ if ($_GET['id']) {
               </select>
             </div>
             <div class='btn-group float-right mt-3'>
-              <button type="reset" class='btn btn-warning' href="user.php">Clear</button>
-              <button class='btn btn-primary'>Save</button>
+              <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
+              <button type="reset" class='btn btn-primary' onclick="upload()">Save</button>
             </div>
           </form>
         </div>
         <!-- user list -->
-        <?php
-        // $userSql = "SELECT * FROM users";
-        $userSql = "SELECT users.id,users.name,users.login_id,users.password,roles.name as rname FROM users LEFT JOIN roles ON users.role_id=roles.id WHERE users.isdeleted=0";
-        $userPdo = $pdo->prepare($userSql);
-        $userPdo->execute();
-        $users = $userPdo->fetchAll(PDO::FETCH_OBJ);
-        // echo "<pre>";
-        // print_r($users);
-        ?>
         <div class="col-md-8">
-          <table class='table table-bordered table-striped'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>LoginID</th>
-                <th>Password</th>
-                <th>Role</th>
-                <th width="50px">#</th>
-                <th width="50px">#</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($users as $user) : ?>
-                <tr>
-                  <td><?= $user->name ?></td>
-                  <td><?= $user->login_id ?></td>
-                  <td><?= $user->password ?></td>
-                  <td><?= $user->rname ?></td>
-                  <td>
-                    <a href="user.php?id=<?= $user->id ?>">
-                      <i class='fa fa-edit'></i>
-                    </a>
-                  </td>
-                  <td>
-                    <?php if ($_SESSION['user_id'] != $user->id) : ?>
-                      <a href="_actions/user_delete.php?id=<?= $user->id ?>" onclick="return confirm('Are you sure to delete this user!')">
-                        <i class='fa fa-trash'></i>
-                      </a>
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+          <div id='user_list'></div>
         </div>
       </div>
     </div>
@@ -121,7 +79,55 @@ if ($_GET['id']) {
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
+<script>
+  //get user list
+  function loadDataList(search = '') {
+    if (search.length == 0) {
+      fetch("/_server/user_data.php")
+        .then(res => res.text()).
+      then(data => document.getElementById("user_list").innerHTML = data);
+    } else {
+      fetch("/_server/user_data.php?search=" + search)
+        .then(res => res.text()).
+      then(data => document.getElementById("user_list").innerHTML = data);
+    }
+  }
+  //delete user by id
+  function deleteUser(id) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "/_actions/user_delete.php?id=" + id, true);
+    xmlhttp.send();
+    loadDataList();
+  }
+  //post data to update and create
+  function upload() {
+    url = "_actions/user_add_update.php";
+    const formData = new FormData(document.getElementById("myForm"));
+    fetch(url, {
+        method: "POST",
+        body: formData
+      }).then(resp => console.log(resp.text()))
+      .then(loadDataList())
+      .catch(function(error) {
+        console.error(error);
+      })
+    clearForm();
+  }
+  //clear form data value
+  function clearForm() {
+    document.getElementById("input_id").value = "";
+    document.getElementById("input_name").value = "";
+    document.getElementById("input_login_id").value = "";
+    document.getElementById("input_password").value = "";
+  }
+  //initial state
+  window.onload = function() {
+    // setInterval(() => {
+    //   loadUserList();
+    // }, 1000);
+    loadDataList();
+  };
+</script>
 <?php
 require 'footer.php';
 ?>

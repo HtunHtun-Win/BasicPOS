@@ -5,32 +5,37 @@
 
     if($_POST){
         $name = $_POST['name'];
-        $description = $_POST['description'];
-        if(!$_POST['id']) {
-                //Inset new category
-                $addsql = "INSERT INTO users(name,login_id,password,role_id) VALUES(:name,:login_id,:password,:role_id)";
+        $desc = $_POST['description'];
+        if(!$_POST['id']) {//check duplicate login_id
+            $chkSql = "SELECT * FROM categories where name=:name";
+            $chkPdo = $pdo->prepare($chkSql);
+            $chkPdo->execute([':name'=> $name]);
+            $result = $chkPdo->fetchObject();
+            if($result){
+                echo "exits category";
+                $_SESSION['msg'] = "msg";
+                header('Location: ../category.php');
+            }else {//Inset new user
+                $addsql = "INSERT INTO categories(name,description) VALUES(:name,:description)";
                 $addPdo = $pdo->prepare($addsql);
                 $addPdo->execute([
                     ':name' => $name,
-                    ':login_id' => $login_id,
-                    ':password' => $password,
-                    ':role_id' => $role,
+                    ':description' => $desc
                 ]);
-                header('Location: ../user.php');
+                header('Location: ../category.php');
+            }
         }else{
             $id = $_POST['id'];
-            $updatesql = "UPDATE users SET name=:name,login_id=:login_id,password=:password,role_id=:role_id WHERE id=:id";
+            $updatesql = "UPDATE categories SET name=:name,description=:description WHERE id=:id";
             $upPdo = $pdo->prepare($updatesql);
             $upPdo->execute([
                 ':name' => $name,
-                ':login_id' => $login_id,
-                ':password' => $password,
-                ':role_id' => $role,
+                ':description' => $desc,
                 ':id' => $id,
             ]);
-            header('Location: ../user.php');
+            header('Location: ../category.php');
         }
     }else{
-        header('Location: ../user.php');
+        header('Location: ../category.php');
     }
 

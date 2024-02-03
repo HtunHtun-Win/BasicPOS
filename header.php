@@ -37,7 +37,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
       </ul>
       <!-- Right navbar links -->
+      <?php
+      $url = $_SERVER['REQUEST_URI'];
+      echo $url;
+      ?>
       <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <div class="nav-link">
+            <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)">
+          </div>
+        </li>
         <li class="nav-item">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">
             <i class="fas fa-expand-arrows-alt"></i>
@@ -118,7 +127,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">Inventory List</a>
+                  <a href="/product.php" class="nav-link">Products List</a>
                 </li>
               </ul>
               <?php if ($_SESSION['user_role'] == 1) : ?>

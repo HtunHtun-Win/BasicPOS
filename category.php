@@ -3,12 +3,12 @@ require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
 check_privilege();
-//get user info to edit
+//get category info to edit
 if ($_GET['id']) {
-  $catinfoSql = "SELECT * FROM categories WHERE id=" . $_GET['id'];
-  $catinfoPdo = $pdo->prepare($catinfoSql);
-  $catinfoPdo->execute();
-  $catinfo = $catinfoPdo->fetchObject();
+  $cfSql = "SELECT * FROM categories WHERE id=" . $_GET['id'];
+  $cfPdo = $pdo->prepare($cfSql);
+  $cfPdo->execute();
+  $catinfo = $cfPdo->fetchObject();
 }
 ?>
 
@@ -20,7 +20,7 @@ if ($_GET['id']) {
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <!-- category edit form-->
+        <!-- user edit form-->
         <div class="col-md-4 mt-3">
           <?php if ($_SESSION['msg']) : ?>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -31,65 +31,25 @@ if ($_GET['id']) {
             </div>
           <?php endif;
           unset($_SESSION['msg']); ?>
-          <form action="/_actions/category_add_update.php" method="post">
-            <input type="hidden" name="id" value="<?= $catinfo->id ?>">
+          <form method="post" id="myForm">
+            <input type="hidden" name="id" id="input_id" value="<?= $catinfo->id ?>">
             <div class='from-group'>
               <label>Name</label>
-              <input type="text" name="name" class='form-control' value="<?= $catinfo->name ?>" required>
+              <input type="text" name="name" id="input_name" class='form-control' value="<?= $catinfo->name ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Description</label>
-              <textarea name="description" class='form-control' cols="30" rows="10"><?= $catinfo->description ?></textarea>
+              <textarea type="text" name="description" id="input_desc" class='form-control' required><?= $catinfo->description ?></textarea>
             </div>
             <div class='btn-group float-right mt-3'>
-              <a class='btn btn-warning' href="category.php">Clear</a>
-              <button class='btn btn-primary'>Save</button>
+              <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
+              <button type="reset" class='btn btn-primary' onclick="upload()">Save</button>
             </div>
           </form>
         </div>
-        <!-- categories list -->
-        <?php
-        //get categories list
-        $catSql = "SELECT * FROM categories";
-        $catPdo = $pdo->prepare($catSql);
-        $catPdo->execute();
-        $categories = $catPdo->fetchAll(PDO::FETCH_OBJ);
-        $no = 1;
-        ?>
+        <!-- user list -->
         <div class="col-md-8">
-          <table class='table table-bordered table-striped'>
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th width="50px">#</th>
-                <th width="50px">#</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($categories as $category) : ?>
-                <tr>
-                  <td><?= $no ?></td>
-                  <td><?= $category->name ?></td>
-                  <td><?= $category->description ?></td>
-                  <td>
-                    <a href="category.php?id=<?= $category->id ?>">
-                      <i class='fa fa-edit'></i>
-                    </a>
-                  </td>
-                  <td>
-                    <?php if ($_SESSION['user_id'] != $user->id) : ?>
-                      <a href=".php?id=<?= $category->id ?>" onclick="return confirm('Are you sure to delete this user!')">
-                        <i class='fa fa-trash'></i>
-                      </a>
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php $no++;
-              endforeach; ?>
-            </tbody>
-          </table>
+          <div id='user_list'></div>
         </div>
       </div>
     </div>
@@ -98,7 +58,54 @@ if ($_GET['id']) {
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
+<script>
+  //get user list
+  function loadDataList(search = '') {
+    if (search.length == 0) {
+      fetch("/_server/category_data.php")
+        .then(res => res.text()).
+      then(data => document.getElementById("user_list").innerHTML = data);
+    } else {
+      fetch("/_server/category_data.php?search="+search)
+        .then(res => res.text()).
+      then(data => document.getElementById("user_list").innerHTML = data);
+    }
+  }
+  //delete category by id
+  function deleteCategory(id) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "/_actions/category_delete.php?id=" + id, true);
+    xmlhttp.send();
+    loadDataList();
+  }
+  //post data to update and create
+  function upload() {
+    url = "_actions/category_add_update.php";
+    const formData = new FormData(document.getElementById("myForm"));
+    fetch(url, {
+        method: "POST",
+        body: formData
+      }).then(resp => console.log(resp.text()))
+      .then(loadDataList())
+      .catch(function(error) {
+        console.error(error);
+      })
+    clearForm();
+  }
+  //clear form data value
+  function clearForm() {
+    document.getElementById("input_id").value = "";
+    document.getElementById("input_name").value = "";
+    document.getElementById("input_desc").value = "";
+  }
+  //initial state
+  window.onload = function() {
+    // setInterval(() => {
+    //   loadDataList();
+    // }, 1000);
+    loadDataList();
+  };
+</script>
 <?php
 require 'footer.php';
 ?>
