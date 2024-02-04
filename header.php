@@ -38,15 +38,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </ul>
       <!-- Right navbar links -->
       <?php
-      $url = $_SERVER['REQUEST_URI'];
-      echo $url;
+      $uri = explode('.', $_SERVER['REQUEST_URI']);
+      $url = $uri[0];
       ?>
       <ul class="navbar-nav ml-auto">
+        <?php if($url!="/product_add_update"): ?>
         <li class="nav-item">
           <div class="nav-link">
             <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)">
           </div>
         </li>
+        <?php endif; ?>
         <li class="nav-item">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">
             <i class="fas fa-expand-arrows-alt"></i>
@@ -70,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Sale -->
+            <!-- Sale -- Home -->
             <?php if ($_SESSION['user_role'] != 3) : ?>
               <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -117,7 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <?php endif ?>
 
             <!-- Inventory -->
-            <li class="nav-item">
+            <li class="nav-item <?php if(str_contains($url, 'product')){echo 'menu-open';} ?>">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-boxes-stacked"></i>
                 <p>
@@ -133,7 +135,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php if ($_SESSION['user_role'] == 1) : ?>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Stock Adjustment</a>
+                    <a href="#" class="nav-link">Products Adjust</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">

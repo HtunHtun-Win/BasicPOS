@@ -6,7 +6,7 @@
     if($_POST){
         $name = $_POST['name'];
         $desc = $_POST['description'];
-        if(!$_POST['id']) {//check duplicate login_id
+        if(!$_POST['id']) {//check duplicate category
             $chkSql = "SELECT * FROM categories where name=:name";
             $chkPdo = $pdo->prepare($chkSql);
             $chkPdo->execute([':name'=> $name]);
