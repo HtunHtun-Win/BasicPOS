@@ -42,12 +42,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $url = $uri[0];
       ?>
       <ul class="navbar-nav ml-auto">
-        <?php if($url!="/product_add_update"): ?>
-        <li class="nav-item">
-          <div class="nav-link">
-            <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)">
-          </div>
-        </li>
+        <?php if ($url != "/product_add_update") : ?>
+          <li class="nav-item">
+            <div class="nav-link">
+              <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)">
+            </div>
+          </li>
         <?php endif; ?>
         <li class="nav-item">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -119,7 +119,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <?php endif ?>
 
             <!-- Inventory -->
-            <li class="nav-item <?php if(str_contains($url, 'product')){echo 'menu-open';} ?>">
+            <li class="nav-item <?php if(str_contains($url, 'product')) {
+                                  echo 'menu-open';
+                                } ?>">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-boxes-stacked"></i>
                 <p>
@@ -140,7 +142,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="/category.php" class="nav-link">Categories</a>
+                    <a href="#" class="nav-link">SalePrice Change</a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="/product_category.php" class="nav-link">Categories</a>
                   </li>
                 </ul>
               <?php endif; ?>

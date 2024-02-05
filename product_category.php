@@ -22,15 +22,6 @@ if ($_GET['id']) {
       <div class="row">
         <!-- user edit form-->
         <div class="col-md-4 mt-3">
-          <?php if ($_SESSION['msg']) : ?>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <strong>Operation fails!</strong> LoginID can't duplicate!
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          <?php endif;
-          unset($_SESSION['msg']); ?>
           <form method="post" id="myForm">
             <input type="hidden" name="id" id="input_id" value="<?= $catinfo->id ?>">
             <div class='from-group'>
@@ -43,7 +34,7 @@ if ($_GET['id']) {
             </div>
             <div class='btn-group float-right mt-3'>
               <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
-              <button type="reset" class='btn btn-primary' onclick="upload()">Save</button>
+              <button type="button" class='btn btn-primary' onclick="upload()">Save</button>
             </div>
           </form>
         </div>
@@ -66,7 +57,7 @@ if ($_GET['id']) {
         .then(res => res.text()).
       then(data => document.getElementById("user_list").innerHTML = data);
     } else {
-      fetch("/_server/category_data.php?search="+search)
+      fetch("/_server/category_data.php?search=" + search)
         .then(res => res.text()).
       then(data => document.getElementById("user_list").innerHTML = data);
     }
@@ -85,12 +76,18 @@ if ($_GET['id']) {
     fetch(url, {
         method: "POST",
         body: formData
-      }).then(resp => console.log(resp.text()))
-      .then(loadDataList())
+      }).then(resp => resp.text())
+      .then(function(data) {
+        if (data == 'exist') {
+          alert('Category name must be unique!');
+        } else if (data == 'success') {
+          clearForm();
+        }
+        loadDataList();
+      })
       .catch(function(error) {
         console.error(error);
       })
-    clearForm();
   }
   //clear form data value
   function clearForm() {

@@ -112,16 +112,14 @@ if ($_GET['id']) {
                 body: formData
             }).then(resp => resp.text())
             .then(function(data) {
-                chk_id = document.getElementById("input_id").value;
-                console.log(chk_id);
-                if (chk_id) {
-                    window.location.href = "/product.php";
-                }else if(data=='success') {
+                if (data == 'exist') {
+                    alert('Code can\'t be duplicate value!');
+                } else if (data == 'success') {
                     clearForm();
-                }else if(data=='exist'){
-                    alert('Code can\'s be duplicate value!');
+                } else if(data == 'update'){
+                    window.location.href="../product.php";
                 }
-                
+
             })
             .catch(function(error) {
                 console.error(error);

@@ -64,7 +64,7 @@ if ($_GET['id']) {
             </div>
             <div class='btn-group float-right mt-3'>
               <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
-              <button type="reset" class='btn btn-primary' onclick="upload()">Save</button>
+              <button type="button" class='btn btn-primary' onclick="upload()">Save</button>
             </div>
           </form>
         </div>
@@ -101,17 +101,27 @@ if ($_GET['id']) {
   }
   //post data to update and create
   function upload() {
-    url = "_actions/user_add_update.php";
+    url = "/_actions/user_add_update.php";
     const formData = new FormData(document.getElementById("myForm"));
     fetch(url, {
         method: "POST",
         body: formData
-      }).then(resp => console.log(resp.text()))
-      .then(loadDataList())
+      }).then(resp => resp.text())
+      .then(function(data) {
+        console.log(data);
+        if (data == 'require') {
+          alert('You need to fill all blank!');
+        } else if (data == 'exist') {
+          console.log(data);
+          alert('Login_id must be unique!');
+        } else if (data == 'success') {
+          clearForm();
+        }
+        loadDataList();
+      })
       .catch(function(error) {
         console.error(error);
       })
-    clearForm();
   }
   //clear form data value
   function clearForm() {
