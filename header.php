@@ -17,6 +17,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -119,7 +122,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <?php endif ?>
 
             <!-- Inventory -->
-            <li class="nav-item <?php if(str_contains($url, 'product')) {
+            <li class="nav-item <?php if (str_contains($url, 'product')) {
                                   echo 'menu-open';
                                 } ?>">
               <a href="#" class="nav-link">
@@ -137,7 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php if ($_SESSION['user_role'] == 1) : ?>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Products Adjust</a>
+                    <a href="/product_adjust.php" class="nav-link">Products Adjust</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">
