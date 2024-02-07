@@ -44,6 +44,33 @@ INSERT INTO `categories` VALUES (1,'Default Category','Default Category',0,'2024
 UNLOCK TABLES;
 
 --
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` VALUES (1,'DefaultCustomer','-','-','2024-02-07 13:46:10'),(2,'AungAung','09-123123','YGN','2024-02-07 13:46:39');
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `product_log`
 --
 
@@ -55,10 +82,10 @@ CREATE TABLE `product_log` (
   `date` datetime NOT NULL DEFAULT current_timestamp(),
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL,
+  `note` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,6 +94,7 @@ CREATE TABLE `product_log` (
 
 LOCK TABLES `product_log` WRITE;
 /*!40000 ALTER TABLE `product_log` DISABLE KEYS */;
+INSERT INTO `product_log` VALUES (1,'2024-02-07 19:25:04',1,5,'adjust',1),(2,'2024-02-07 19:25:04',6,-5,'adjust',1);
 /*!40000 ALTER TABLE `product_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,7 +127,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'000001','ToeToe','Potato chip',0,2,400,500,'2024-02-04 16:29:20','2024-01-31 21:22:04',0),(2,'000002','VeVe Lychee','Juice',0,3,500,700,'2024-02-04 16:29:23','2024-01-31 21:22:04',0),(3,'SK234','SK','SK',0,1,300,400,'2024-02-04 17:10:41','2024-02-04 17:10:41',0),(6,'2342','speed','speed star1',10,3,500,700,'2024-02-04 21:11:13','2024-02-04 18:24:31',0);
+INSERT INTO `products` VALUES (1,'000001','ToeToe','Potato chip',10,2,400,500,'2024-02-07 19:25:04','2024-01-31 21:22:04',0),(2,'000002','VeVe Lychee','Juice',2,3,500,700,'2024-02-07 19:17:22','2024-01-31 21:22:04',0),(3,'SK234','SK','SK',5,1,300,400,'2024-02-07 19:17:02','2024-02-04 17:10:41',0),(6,'2342','speed','speed star1',10,3,500,700,'2024-02-07 19:25:04','2024-02-04 18:24:31',0);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,6 +153,61 @@ LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` VALUES (1,'Admin'),(2,'Sale'),(3,'Purchase');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sales`
+--
+
+DROP TABLE IF EXISTS `sales`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sales` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sale_no` varchar(255) NOT NULL,
+  `customer_id` int(11) NOT NULL DEFAULT 1,
+  `user_id` int(11) NOT NULL,
+  `total_price` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sales`
+--
+
+LOCK TABLES `sales` WRITE;
+/*!40000 ALTER TABLE `sales` DISABLE KEYS */;
+INSERT INTO `sales` VALUES (1,'INV-000001',1,1,1000,'2024-02-07 20:12:32'),(2,'000002',2,1,1200,'2024-02-07 21:36:38');
+/*!40000 ALTER TABLE `sales` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sales_detail`
+--
+
+DROP TABLE IF EXISTS `sales_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sales_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sales_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sales_detail`
+--
+
+LOCK TABLES `sales_detail` WRITE;
+/*!40000 ALTER TABLE `sales_detail` DISABLE KEYS */;
+INSERT INTO `sales_detail` VALUES (1,1,1,2,'2024-02-07 13:49:16'),(2,2,1,1,'2024-02-07 15:07:02'),(3,2,6,1,'2024-02-07 15:07:15');
+/*!40000 ALTER TABLE `sales_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -166,4 +249,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-06  7:04:07
+-- Dump completed on 2024-02-07 21:58:13
