@@ -48,7 +48,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <?php if ($url != "/product_add_update") : ?>
           <li class="nav-item">
             <div class="nav-link">
-              <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)">
+              <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)" autocomplete="off">
             </div>
           </li>
         <?php endif; ?>
@@ -64,7 +64,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="/home.php" class="brand-link">
+      <a href="/sale.php" class="brand-link">
         <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BasicPOS</span>
       </a>
@@ -77,7 +77,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Sale -- Home -->
             <?php if ($_SESSION['user_role'] != 3) : ?>
-              <li class="nav-item">
+              <li class="nav-item <?php if (str_contains($url, 'sale')) {
+                                    echo 'menu-open';
+                                  } ?>">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-cart-shopping"></i>
                   <p>
@@ -87,12 +89,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Sale</a>
+                    <a href="/sales.php" class="nav-link">Sale</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Sale Vouchers</a>
+                    <a href="/sale_voucher.php" class="nav-link">Sale Vouchers</a>
                   </li>
                 </ul>
               </li>

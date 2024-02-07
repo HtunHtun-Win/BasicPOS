@@ -15,7 +15,7 @@
 				$_SESSION['user_name'] = $user->name;
 				$_SESSION['user_role'] = $user->role_id;
 				$_SESSION['logged_in'] = true;
-				header('Location: /home.php');
+				header('Location: /sales.php');
 			}else{
 				$_SESSION['msg'] = "msg";
 				header('Location: /index.php');
