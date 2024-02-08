@@ -10,21 +10,28 @@ check_auth();
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-            <div class="container">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th width='50px'>No</th>
-                            <th width='150px'>Date</th>
-                            <th>Invoice No.</th>
-                            <th>Customer Name</th>
-                            <th>Total</th>
-                            <th width='50px'>#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="v-list">
-                    </tbody>
-                </table>
+            <div class="row">
+                <!-- voucher list -->
+                <div class="col-md-8">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th width='50px'>No</th>
+                                <th width='150px'>Date</th>
+                                <th>Invoice No.</th>
+                                <th>Customer Name</th>
+                                <th>Total</th>
+                                <th width='50px'>#</th>
+                            </tr>
+                        </thead>
+                        <tbody id="v-list">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- voucher preview -->
+                <div class="col-md-4">
+                    <div id="v-detail"></div>
+                </div>
             </div>
         </div>
         <!-- /.container-fluid -->
@@ -33,7 +40,7 @@ check_auth();
 </div>
 <!-- /.content-wrapper -->
 <script>
-    //get vuocher list
+    //get voucher list
     function loadDataList(search = '') {
         if (search.length == 0) {
             fetch("/reports/sale_voucher.php")
@@ -44,6 +51,12 @@ check_auth();
                 .then(res => res.text()).
             then(data => document.getElementById("v-list").innerHTML = data);
         }
+    }
+    //get voucher detail by id
+    function voucherDetail(id) {
+        fetch("/reports/sale_voucher_detail.php?vid=" + id)
+            .then(res => res.text()).
+        then(data => document.getElementById("v-detail").innerHTML = data);
     }
     //init state
     window.onload = function() {
