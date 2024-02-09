@@ -68,7 +68,7 @@ check_privilege();
                     </div>
                 </div>
                 <div class="act-button">
-                    <button class="btn btn-warning mr-2" onclick="sitemClear()">Clear All Item</button>
+                    <button class="btn btn-warning mr-2" onclick="sitemClear('sitem')">Clear All Item</button>
                     <button class="btn btn-primary" onclick="save()">Save</button>
                 </div>
             </div>
