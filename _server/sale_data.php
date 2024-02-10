@@ -15,12 +15,12 @@ if (isset($_POST)) {
         $user_id = $_SESSION['user_id'];
         $discount = $_POST['discount'];
         $totalAmount = $_POST['totalAmount'];
-        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES ((SELECT voucher_no from voucher)+1,$customer_id,$user_id,$discount,$totalAmount)";
+        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES ((SELECT no from gen_id where id=1)+1,$customer_id,$user_id,$discount,$totalAmount)";
         $salePdo = $pdo->prepare($saleSql);
         $salePdo->execute();
         $last_sale_id = $pdo->lastInsertID();
         //update voucher no
-        $updateVnoSql = "UPDATE voucher SET voucher_no=voucher_no+1 WHERE id=1";
+        $updateVnoSql = "UPDATE gen_id SET no=no+1 WHERE id=1";
         $updateVPdo = $pdo->prepare($updateVnoSql);
         $updateVPdo->execute();
         //sale voucher detail
@@ -47,7 +47,7 @@ if (isset($_POST)) {
             //add log
             $logPdo->execute([
                 ':pid' => $id,
-                ':qty' => $value[0],
+                ':qty' => -$value[0],
                 ':note' => "sale",
                 ':user_id' => $user_id
             ]);

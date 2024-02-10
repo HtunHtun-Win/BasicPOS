@@ -158,7 +158,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
 
             <!-- Contact -->
-            <li class="nav-item">
+            <li class="nav-item <?php if (str_contains($url, 'customer') or str_contains($url, 'supplier')) {
+                                  echo 'menu-open';
+                                } ?>">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-address-book"></i>
                 <p>
@@ -176,7 +178,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php if ($_SESSION['user_role'] != 2) : ?>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Supplier</a>
+                    <a href="/supplier.php" class="nav-link">Supplier</a>
                   </li>
                 </ul>
               <?php endif; ?>

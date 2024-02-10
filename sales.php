@@ -87,7 +87,7 @@ check_privilege();
           <form class="mt-1" id="sale-form">
             <?php
             //get customer list
-            $custSql = "SELECT * FROM customers WHERE id!=1 ORDER BY name";
+            $custSql = "SELECT * FROM customers WHERE id!=1 AND isdeleted=0 ORDER BY name";
             $custPdo = $pdo->prepare($custSql);
             $custPdo->execute();
             $customers = $custPdo->fetchAll(PDO::FETCH_OBJ);

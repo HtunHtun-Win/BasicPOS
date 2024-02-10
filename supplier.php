@@ -5,7 +5,7 @@ check_auth();
 check_privilege();
 //get user info to edit
 if ($_GET['id']) {
-  $custInfoSql = "SELECT * FROM customers WHERE id=" . $_GET['id'];
+  $custInfoSql = "SELECT * FROM suppliers WHERE id=" . $_GET['id'];
   $custInfoPdo = $pdo->prepare($custInfoSql);
   $custInfoPdo->execute();
   $custInfo = $custInfoPdo->fetchObject();
@@ -68,11 +68,11 @@ if ($_GET['id']) {
   //get user list
   function loadDataList(search = '') {
     if (search.length == 0) {
-      fetch("/_server/customer_data.php")
+      fetch("/_server/supplier_data.php")
         .then(res => res.text()).
       then(data => document.getElementById("user_list").innerHTML = data);
     } else {
-      fetch("/_server/customer_data.php?search=" + search)
+      fetch("/_server/supplier_data.php?search=" + search)
         .then(res => res.text()).
       then(data => document.getElementById("user_list").innerHTML = data);
     }
@@ -80,13 +80,13 @@ if ($_GET['id']) {
   //delete user by id
   function deleteUser(id) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", "/_actions/customer_delete.php?id=" + id, true);
+    xmlhttp.open("GET", "/_actions/supplier_delete.php?id=" + id, true);
     xmlhttp.send();
     loadDataList();
   }
   //post data to update and create
   function upload() {
-    url = "/_actions/customer_add_update.php";
+    url = "/_actions/supplier_add_update.php";
     const formData = new FormData(document.getElementById("myForm"));
     fetch(url, {
         method: "POST",

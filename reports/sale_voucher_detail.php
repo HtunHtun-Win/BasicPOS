@@ -25,7 +25,7 @@ $no = 1;
 <div class="mt-3">
     <?php
     //get shop info
-    $shopSql = "SELECT * FROM voucher";
+    $shopSql = "SELECT * FROM shop_info";
     $shopPdo = $pdo->prepare($shopSql);
     $shopPdo->execute();
     $shop = $shopPdo->fetchObject();
