@@ -5,7 +5,7 @@
     check_privilege();
 
     if($_GET['id']){
-        $delSql = "UPDATE users SET isdeleted=1 WHERE id=".$_GET['id'];
+        $delSql = "UPDATE customers SET isdeleted=1 WHERE id=".$_GET['id'];
         $delPdo = $pdo->prepare($delSql);
         $delPdo->execute();
     }

@@ -169,7 +169,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php if ($_SESSION['user_role'] != 3) : ?>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Customer</a>
+                    <a href="/customer.php" class="nav-link">Customer</a>
                   </li>
                 </ul>
               <?php endif; ?>
