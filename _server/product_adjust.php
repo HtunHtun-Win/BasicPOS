@@ -8,20 +8,21 @@ $user_id = $_SESSION['user_id'];
 if (isset($_POST)) {
     $id = $_POST['item_id'];
     if ($id == 0) {
-        $items = $_SESSION['sitem'];
-    } else if (!isset($_SESSION['sitem'][$id])) {
-        $_SESSION['sitem'][$id] = 0;
-        $items = $_SESSION['sitem'];
+        $items = $_SESSION['adj-item'];
+    } else if (!isset($_SESSION['adj-item'][$id])) {
+        $_SESSION['adj-item'][$id] = 0;
+        $items = $_SESSION['adj-item'];
     } else {
-        $_SESSION['sitem'][$id] += 1;
-        $items = $_SESSION['sitem'];
+        $_SESSION['adj-item'][$id] += 1;
+        $items = $_SESSION['adj-item'];
     }
 }
 
 if ($_GET) {
     //submit data
     if(isset($_GET['save'])){
-        $items = $_SESSION['sitem'];
+        $items = $_SESSION['adj-item'];
+        //Update product quantity and add log
         $svSql = "UPDATE products SET quantity=quantity+:qty WHERE id=:pid";
         $svPdo = $pdo->prepare($svSql);
         $logSql = "INSERT INTO product_log(product_id,quantity,note,user_id) VALUES(:pid,:qty,:note,:user_id)";
@@ -38,16 +39,16 @@ if ($_GET) {
                 ':user_id' => $user_id
             ]);
         }
-        unset($_SESSION['sitem']);
+        unset($_SESSION['adj-item']);
         die();
     }else if (isset($_GET['del_id'])) {//remove item
         $pid = $_GET['del_id'];
-        unset($_SESSION['sitem'][$pid]);
+        unset($_SESSION['adj-item'][$pid]);
     }else{
         //add quantity
         $pid = $_GET['id']; // product id
         $temp_qty = $_GET['qty']; // product quantity
-        $_SESSION['sitem'][$pid] = $temp_qty;
+        $_SESSION['adj-item'][$pid] = $temp_qty;
     }
 }
 
@@ -67,9 +68,9 @@ $no = 1;
             <td><?= $product->name ?></td>
             <td><?= $product->quantity ?></td>
             <td>
-                <input type="number" class="form-control" value="<?= $qty ?>" onkeyup="addQuantity(<?= $product->id ?>,this.value)">
+                <input type="number" class="form-control" value="<?= $qty ?>" onfocusout="addQuantity(<?= $product->id ?>,this.value)">
             </td>
-            <td id="new-qty"></td>
+            <td id="new-qty"><?= $product->quantity+$qty ?></td>
             <td>
                 <a type="submit" onclick="deleteProduct(<?= $product->id ?>)">
                     <i class='fa fa-trash'></i>

@@ -115,13 +115,13 @@ check_privilege();
             </div>
             <div class="form-group">
               <label>Total Amount</label>
-              <input type="text" class="form-control" disabled name="totalAmount" id="totAmount">
+              <input type="text" class="form-control" disabled="disabled" name="totalAmount" id="totAmount">
             </div>
           </form>
         </div>
         <div class="act-button">
           <button class="btn btn-warning mr-2" onclick="sitemClear('sale-item')">Clear All Item</button>
-          <button class="btn btn-primary" onclick="viewAmount()">Paid</button>
+          <button class="btn btn-primary" onclick="paid()">Paid</button>
         </div>
       </div>
     </div>
@@ -206,7 +206,18 @@ check_privilege();
   }
   //paid
   function paid() {
-    const formData = new FormData(Document.getElementById("sale-form"));
+    document.getElementById("totAmount").disabled = false;
+    const formData = new FormData(document.getElementById("sale-form"));
+    document.getElementById("totAmount").disabled = true;
+    fetch("/_server/sale_data.php", {
+        method: "POST",
+        body: formData
+      })
+      .then(resp => resp.text())
+      .then(loadDataList)
+      .then(document.getElementById("dis").value = 0)
+      .then(viewAmount)
+      .catch()
   }
   //clear selected items
   function sitemClear(str) {
@@ -219,13 +230,6 @@ check_privilege();
   //delete product by id
   function deleteProduct(id) {
     fetch("/_server/sale_data.php?del_id=" + id)
-      .then(resp => resp.text())
-      .then(loadDataList())
-      .catch()
-  }
-  //save
-  function save() {
-    fetch("/_server/product_adjust.php?save=" + 1)
       .then(resp => resp.text())
       .then(loadDataList())
       .catch()

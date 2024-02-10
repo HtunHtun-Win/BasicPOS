@@ -6,21 +6,71 @@ check_privilege();
 $user_id = $_SESSION['user_id'];
 //add item
 if (isset($_POST)) {
-    $id = $_POST['item_id'];
-    if ($id == 0) {
+    if($_POST['customerId']){
+        //sale voucher
+        if(!$_SESSION['sale-item']){
+            die();
+        }
+        $customer_id = $_POST['customerId'];
+        $user_id = $_SESSION['user_id'];
+        $discount = $_POST['discount'];
+        $totalAmount = $_POST['totalAmount'];
+        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES ((SELECT voucher_no from voucher)+1,$customer_id,$user_id,$discount,$totalAmount)";
+        $salePdo = $pdo->prepare($saleSql);
+        $salePdo->execute();
+        $last_sale_id = $pdo->lastInsertID();
+        //update voucher no
+        $updateVnoSql = "UPDATE voucher SET voucher_no=voucher_no+1 WHERE id=1";
+        $updateVPdo = $pdo->prepare($updateVnoSql);
+        $updateVPdo->execute();
+        //sale voucher detail
         $items = $_SESSION['sale-item'];
-    } else if (!isset($_SESSION['sale-item'][$id])) {
-        //get item init price
-        $sql = "SELECT sale_price FROM products WHERE id=$id";
-        $pricePdo = $pdo->prepare($sql);
-        $pricePdo->execute();
-        $price = $pricePdo->fetchObject();
-        //
-        $_SESSION['sale-item'][$id] = [1, $price->sale_price];
-        $items = $_SESSION['sale-item'];
-    } else {
-        $_SESSION['sale-item'][$id][0] += 1;
-        $items = $_SESSION['sale-item'];
+        $vDetailSql = "INSERT INTO sales_detail(sales_id,product_id,quantity,price) VALUES($last_sale_id,:pid,:qty,:price)";
+        $vDetailPdo = $pdo->prepare($vDetailSql);
+        //Update product quantity and add log
+        $svSql = "UPDATE products SET quantity=quantity-:qty WHERE id=:pid";
+        $svPdo = $pdo->prepare($svSql);
+        $logSql = "INSERT INTO product_log(product_id,quantity,note,user_id) VALUES(:pid,:qty,:note,:user_id)";
+        $logPdo = $pdo->prepare($logSql);
+        foreach($items as $id=>$value){
+            //inset sale detail
+            $vDetailPdo->execute([
+                ':pid' => $id,
+                ':qty' => $value[0],
+                ':price' => $value[1]
+            ]);
+            //update product quantity
+            $svPdo->execute([
+                ':qty' => $value[0],
+                ':pid' => $id
+            ]);
+            //add log
+            $logPdo->execute([
+                ':pid' => $id,
+                ':qty' => $value[0],
+                ':note' => "sale",
+                ':user_id' => $user_id
+            ]);
+        }
+        unset($_SESSION['sale-item']);
+        die();
+    }else{
+        $id = $_POST['item_id'];
+        if ($id == 0) {
+            $items = $_SESSION['sale-item'];
+        } else if (!isset($_SESSION['sale-item'][$id])) {
+            //get item init price
+            $sql = "SELECT sale_price FROM products WHERE id=$id";
+            $pricePdo = $pdo->prepare($sql);
+            $pricePdo->execute();
+            $price = $pricePdo->fetchObject();
+            //
+            $_SESSION['sale-item'][$id] = [1, $price->sale_price];
+            $items = $_SESSION['sale-item'];
+        } else {
+            $_SESSION['sale-item'][$id][0] += 1;
+            $items = $_SESSION['sale-item'];
+        }
     }
 }
 //increase quantity and change price

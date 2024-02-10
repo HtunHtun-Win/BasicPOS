@@ -102,12 +102,12 @@ check_privilege();
     function addQuantity(id, qty) {
         fetch("/_server/product_adjust.php?id=" + id + "&qty=" + qty)
             .then(resp => resp.text())
-            .then(data => console.log(data))
+            .then(loadDataList)
             .catch()
     }
     //clear selected items
     function sitemClear() {
-        fetch("/_actions/sitem_clear.php")
+        fetch("/_actions/sitem_clear.php?adj-item=1")
             .then(resp => resp.text())
             .then(loadDataList())
             .catch()

@@ -22,14 +22,20 @@ if ($_GET) {
 }
 $no = 1;
 ?>
-
 <div class="mt-3">
+    <?php
+    //get shop info
+    $shopSql = "SELECT * FROM voucher";
+    $shopPdo = $pdo->prepare($shopSql);
+    $shopPdo->execute();
+    $shop = $shopPdo->fetchObject();
+    ?>
     <center>
-        CompanyName <br>
-        Address <br>
-        Phone
-        <hr>
+        <h4><?= $shop->shop_name ?></h4> <br>
     </center>
+    Address&nbsp;: <b><?= $shop->shop_address ?></b> <br>
+    Phone&ensp;&ensp;: <b><?= $shop->shop_phone ?></b>
+    <hr>
     <div class="row">
         <div class="col-md-6">
             Invoive-No : <?= $voucher->sale_no ?>
@@ -64,7 +70,7 @@ $no = 1;
                 <tr>
                     <td> <?= $no ?></td>
                     <td> <?= $item->name ?></td>
-                    <td> <?= $item->quantity . "($item->price)" ?></td>
+                    <td> <?= $item->quantity . " x " . "($item->price)" ?></td>
                     <td> <?= $item->quantity * $item->price ?></td>
                 </tr>
             <?php $no++;
@@ -73,8 +79,14 @@ $no = 1;
             <tr>
                 <td></td>
                 <td></td>
+                <td>Discount</td>
+                <td><?= $voucher->discount ?></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
                 <td>Total Amount</td>
-                <td><?= $totalAmount ?></td>
+                <td><?= $totalAmount - $voucher->discount ?></td>
             </tr>
         </tbody>
     </table>
