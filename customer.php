@@ -46,10 +46,12 @@ if ($_GET['id']) {
               <label>Address</label>
               <textarea name="address" id="input_address" class="form-control"><?= $custInfo->address ?></textarea>
             </div>
-            <div class='btn-group float-right mt-3'>
-              <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
-              <button type="button" class='btn btn-primary' onclick="upload()">Save</button>
-            </div>
+            <?php if($_SESSION['user_role']==1): ?>
+              <div class='btn-group float-right mt-3'>
+                <button type="button" class='btn btn-warning' onclick="clearForm()">Clear</button>
+                <button type="button" class='btn btn-primary' onclick="upload()">Save</button>
+              </div>
+            <?php endif; ?>
           </form>
         </div>
         <!-- user list -->

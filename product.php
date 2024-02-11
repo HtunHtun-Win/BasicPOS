@@ -2,7 +2,6 @@
 require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
-check_privilege();
 ?>
 
 <?php require 'header.php'; ?>

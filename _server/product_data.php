@@ -2,7 +2,6 @@
 require '../_actions/auth.php';
 require '../config/config.php';
 check_auth();
-check_privilege();
 //user list query
 if ($_GET['search']) {
     $search = $_GET['search'];
@@ -38,14 +37,18 @@ $no = 1;
             <td><?= $product->purchase_price ?></td>
             <td><?= $product->sale_price ?></td>
             <td>
-                <a href="/product_add_update.php?id=<?= $product->id ?>">
-                    <i class='fa fa-edit'></i>
-                </a>
+                <?php if ($_SESSION['user_role'] == 1) : ?>
+                    <a href="/product_add_update.php?id=<?= $product->id ?>">
+                        <i class='fa fa-edit'></i>
+                    </a>
+                <?php endif; ?>
             </td>
             <td>
-                <a type="submit" onclick="deleteProduct(<?= $product->id ?>)">
-                    <i class='fa fa-trash'></i>
-                </a>
+                <?php if ($_SESSION['user_role'] == 1) : ?>
+                    <a type="submit" onclick="deleteProduct(<?= $product->id ?>)">
+                        <i class='fa fa-trash'></i>
+                    </a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php $no++;
