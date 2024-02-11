@@ -2,7 +2,6 @@
 require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
-check_privilege();
 ?>
 
 <!-- remove number arrow -->
@@ -214,6 +213,7 @@ check_privilege();
         body: formData
       })
       .then(resp => resp.text())
+      .then(data=>console.log(data))
       .then(loadDataList)
       .then(document.getElementById("dis").value = 0)
       .then(viewAmount)

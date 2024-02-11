@@ -2,7 +2,6 @@
 require '../_actions/auth.php';
 require '../config/config.php';
 check_auth();
-check_privilege();
 $user_id = $_SESSION['user_id'];
 //add item
 if (isset($_POST)) {
@@ -15,7 +14,18 @@ if (isset($_POST)) {
         $user_id = $_SESSION['user_id'];
         $discount = $_POST['discount'];
         $totalAmount = $_POST['totalAmount'];
-        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES ((SELECT no from gen_id where id=1)+1,$customer_id,$user_id,$discount,$totalAmount)";
+        //get Invoice No.
+        $invSql = "SELECT * FROM gen_id WHERE id=1";
+        $invPdo = $pdo->prepare($invSql);
+        $invPdo->execute();
+        $invObj = $invPdo->fetchObject();
+        $invNo = "";
+        for($digit=strlen(strval($invObj->no+1)); $digit<6; $digit++){
+            $invNo.="0";
+        }
+        $invoiceNo = $invObj->prefix.$invNo.($invObj->no+1);
+        //insert sale voucher
+        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES('$invoiceNo',$customer_id,$user_id,$discount,$totalAmount)";
         $salePdo = $pdo->prepare($saleSql);
         $salePdo->execute();
         $last_sale_id = $pdo->lastInsertID();

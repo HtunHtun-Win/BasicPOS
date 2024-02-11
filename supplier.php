@@ -2,7 +2,6 @@
 require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
-check_privilege();
 //get user info to edit
 if ($_GET['id']) {
   $custInfoSql = "SELECT * FROM suppliers WHERE id=" . $_GET['id'];

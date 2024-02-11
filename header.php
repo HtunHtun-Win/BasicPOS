@@ -231,7 +231,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php endif; ?>
             </li>
 
-            <!-- User -->
+            <!-- Shop Info -->
+            <?php if ($_SESSION['user_role'] == 1) : ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-building"></i>
+                  <p>Shop Info</p>
+                </a>
+              </li>
+            <?php endif ?>
+
+            <!-- User Control -->
             <?php if ($_SESSION['user_role'] == 1) : ?>
               <li class="nav-item">
                 <a href="user.php" class="nav-link">
