@@ -3,7 +3,7 @@
 
     function logged_in(){
         if ($_SESSION['logged_in']) {
-            header('Location: /home.php');
+            header('Location: /sales.php');
         }
     }
 

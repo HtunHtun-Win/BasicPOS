@@ -63,7 +63,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="/sale.php" class="brand-link">
+      <a href="/sales.php" class="brand-link">
         <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BasicPOS</span>
       </a>
@@ -146,7 +146,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">SalePrice Change</a>
+                    <a href="/product_price_change.php" class="nav-link">SalePrice Change</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">
