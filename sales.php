@@ -109,12 +109,16 @@ check_auth();
               <input type="address" class="form-control" id="address" disabled>
             </div>
             <div class="form-group">
+              <label>Net Price</label>
+              <input type="text" class="form-control" disabled="disabled" name="netPrice" id="netPriceId">
+            </div>
+            <div class="form-group">
               <label>Discount</label>
               <input type="number" class="form-control" value="0" name="discount" id="dis" onfocusout="viewAmount()">
             </div>
             <div class="form-group">
-              <label>Total Amount</label>
-              <input type="text" class="form-control" disabled="disabled" name="totalAmount" id="totAmount">
+              <label>Total Price</label>
+              <input type="text" class="form-control" disabled="disabled" name="totPrice" id="totPriceId">
             </div>
           </form>
         </div>
@@ -192,28 +196,31 @@ check_auth();
       }
     });
     //total amount
-    let totalAmount = 0;
+    let netPrice = 0;
+    let totPrice = 0;
     let amounts = document.getElementsByClassName('c-amount');
     let discount = document.getElementById("dis").value;
     const arr = [...amounts].map(input => input.innerText);
     arr.forEach(amount => {
-
-      totalAmount += Number(amount);
+      netPrice += Number(amount);
     })
-    totalAmount -= discount;
-    document.getElementById("totAmount").value = totalAmount;
+    totPrice = netPrice - discount;
+    document.getElementById("netPriceId").value = netPrice;
+    document.getElementById("totPriceId").value = totPrice;
   }
   //paid
   function paid() {
-    document.getElementById("totAmount").disabled = false;
+    document.getElementById("netPriceId").disabled = false;
+    document.getElementById("totPriceId").disabled = false;
     const formData = new FormData(document.getElementById("sale-form"));
-    document.getElementById("totAmount").disabled = true;
+    document.getElementById("netPriceId").disabled = true;
+    document.getElementById("totPriceId").disabled = true;
     fetch("/_server/sale_data.php", {
         method: "POST",
         body: formData
       })
       .then(resp => resp.text())
-      .then(data=>console.log(data))
+      .then(data => console.log(data))
       .then(loadDataList)
       .then(document.getElementById("dis").value = 0)
       .then(viewAmount)

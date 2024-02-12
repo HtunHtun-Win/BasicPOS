@@ -6,12 +6,12 @@ check_privilege();
 //category list query
 if($_GET['search']){
     $search = $_GET['search'];
-    $catSql = "SELECT * FROM categories WHERE isdeleted=0 AND name LIKE '%$search%'";
+    $catSql = "SELECT * FROM categories WHERE isdeleted=0 AND id!=1 AND name LIKE '%$search%'";
     $catPdo = $pdo->prepare($catSql);
     $catPdo->execute();
     $categories = $catPdo->fetchAll(PDO::FETCH_OBJ);
 }else{
-    $catSql = "SELECT * FROM categories WHERE isdeleted=0";
+    $catSql = "SELECT * FROM categories WHERE isdeleted=0 AND id!=1";
     $catPdo = $pdo->prepare($catSql);
     $catPdo->execute();
     $categories = $catPdo->fetchAll(PDO::FETCH_OBJ);
@@ -32,7 +32,7 @@ if($_GET['search']){
                 <td><?= $category->name ?></td>
                 <td><?= $category->description ?></td>
                 <td>
-                    <a href="/category.php?id=<?= $category->id ?>">
+                    <a href="/product_category.php?id=<?= $category->id ?>">
                         <i class='fa fa-edit'></i>
                     </a>
                 </td>

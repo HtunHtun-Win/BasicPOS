@@ -12,8 +12,9 @@ if (isset($_POST)) {
         }
         $customer_id = $_POST['customerId'];
         $user_id = $_SESSION['user_id'];
+        $netPrice = $_POST['netPrice'];
         $discount = $_POST['discount'];
-        $totalAmount = $_POST['totalAmount'];
+        $totalPrice = $_POST['totPrice'];
         //get Invoice No.
         $invSql = "SELECT * FROM gen_id WHERE id=1";
         $invPdo = $pdo->prepare($invSql);
@@ -25,7 +26,7 @@ if (isset($_POST)) {
         }
         $invoiceNo = $invObj->prefix.$invNo.($invObj->no+1);
         //insert sale voucher
-        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,discount,total_price) VALUES('$invoiceNo',$customer_id,$user_id,$discount,$totalAmount)";
+        $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,net_price,discount,total_price) VALUES('$invoiceNo',$customer_id,$user_id,$netPrice,$discount,$totalPrice)";
         $salePdo = $pdo->prepare($saleSql);
         $salePdo->execute();
         $last_sale_id = $pdo->lastInsertID();
