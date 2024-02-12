@@ -72,6 +72,30 @@ INSERT INTO `customers` VALUES (1,'DefaultCustomer','-','-',0,'2024-02-07 13:46:
 UNLOCK TABLES;
 
 --
+-- Table structure for table `flow_type`
+--
+
+DROP TABLE IF EXISTS `flow_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `flow_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `flow_type`
+--
+
+LOCK TABLES `flow_type` WRITE;
+/*!40000 ALTER TABLE `flow_type` DISABLE KEYS */;
+INSERT INTO `flow_type` VALUES (1,'income'),(2,'expense');
+/*!40000 ALTER TABLE `flow_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gen_id`
 --
 
@@ -95,8 +119,38 @@ CREATE TABLE `gen_id` (
 
 LOCK TABLES `gen_id` WRITE;
 /*!40000 ALTER TABLE `gen_id` DISABLE KEYS */;
-INSERT INTO `gen_id` VALUES (1,'sale','for sale voucher','INV#',6,20),(2,'purchase','for purchase voucher','P#',6,0);
+INSERT INTO `gen_id` VALUES (1,'sale','for sale voucher','INV#',6,21),(2,'purchase','for purchase voucher','P#',6,0);
 /*!40000 ALTER TABLE `gen_id` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `income_expense`
+--
+
+DROP TABLE IF EXISTS `income_expense`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `income_expense` (
+  `1` int(11) NOT NULL AUTO_INCREMENT,
+  `amount` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `note` text NOT NULL,
+  `flow_type_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `isdeleted` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`1`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `income_expense`
+--
+
+LOCK TABLES `income_expense` WRITE;
+/*!40000 ALTER TABLE `income_expense` DISABLE KEYS */;
+INSERT INTO `income_expense` VALUES (1,10000,'wifi','htun',1,1,0,'2024-02-12 13:34:27'),(2,5000,'bill','win',2,1,0,'2024-02-12 13:34:27'),(3,3000,'bill','htun htun',2,1,0,'2024-02-12 21:23:11'),(4,32000,'wifi','mytel',2,1,0,'2024-02-12 22:11:30');
+/*!40000 ALTER TABLE `income_expense` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -114,7 +168,7 @@ CREATE TABLE `product_log` (
   `note` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +177,7 @@ CREATE TABLE `product_log` (
 
 LOCK TABLES `product_log` WRITE;
 /*!40000 ALTER TABLE `product_log` DISABLE KEYS */;
-INSERT INTO `product_log` VALUES (24,'2024-02-11 15:08:23',1,-1,'sale',1),(25,'2024-02-11 15:33:36',1,-1,'sale',1),(26,'2024-02-11 15:33:54',2,-1,'sale',1),(27,'2024-02-12 10:13:08',1,-1,'sale',1),(28,'2024-02-12 10:15:23',2,-1,'sale',1),(29,'2024-02-12 10:15:47',1,-1,'sale',1),(30,'2024-02-12 10:25:54',6,-1,'sale',1);
+INSERT INTO `product_log` VALUES (24,'2024-02-11 15:08:23',1,-1,'sale',1),(25,'2024-02-11 15:33:36',1,-1,'sale',1),(26,'2024-02-11 15:33:54',2,-1,'sale',1),(27,'2024-02-12 10:13:08',1,-1,'sale',1),(28,'2024-02-12 10:15:23',2,-1,'sale',1),(29,'2024-02-12 10:15:47',1,-1,'sale',1),(30,'2024-02-12 10:25:54',6,-1,'sale',1),(31,'2024-02-12 17:31:53',6,-1,'sale',1);
 /*!40000 ALTER TABLE `product_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +210,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'000001','ToeToe','Potato chip',1,2,400,500,'2024-02-12 10:15:47','2024-01-31 21:22:04',0),(2,'000002','VeVe Lychee','Juice',-4,3,500,800,'2024-02-12 10:15:23','2024-01-31 21:22:04',0),(3,'SK234','SK','SK',7,1,300,400,'2024-02-11 10:14:56','2024-02-04 17:10:41',0),(6,'2342','speed','speed star1',8,3,500,700,'2024-02-12 10:25:54','2024-02-04 18:24:31',0);
+INSERT INTO `products` VALUES (1,'000001','ToeToe','Potato chip',1,2,400,500,'2024-02-12 10:15:47','2024-01-31 21:22:04',0),(2,'000002','VeVe Lychee','Juice',-4,3,500,800,'2024-02-12 10:15:23','2024-01-31 21:22:04',0),(3,'SK234','SK','SK',7,1,300,400,'2024-02-11 10:14:56','2024-02-04 17:10:41',0),(6,'2342','speed','speed star1',7,3,500,700,'2024-02-12 17:31:53','2024-02-04 18:24:31',0);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -284,7 +338,7 @@ CREATE TABLE `sales` (
   `total_price` int(11) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +347,7 @@ CREATE TABLE `sales` (
 
 LOCK TABLES `sales` WRITE;
 /*!40000 ALTER TABLE `sales` DISABLE KEYS */;
-INSERT INTO `sales` VALUES (27,'INV#000015',1,1,700,0,700,'2024-02-11 15:33:36'),(28,'INV#000016',1,1,800,100,700,'2024-02-11 15:33:54'),(29,'invoice000017',1,1,500,0,500,'2024-02-12 10:13:08'),(30,'INV#018',1,1,800,0,800,'2024-02-12 10:15:23'),(31,'INV#00019',1,1,500,0,500,'2024-02-12 10:15:47'),(32,'INV#000020',1,1,700,0,700,'2024-02-12 10:25:54');
+INSERT INTO `sales` VALUES (27,'INV#000015',1,1,700,0,700,'2024-01-01 15:33:36'),(28,'INV#000016',1,1,800,100,700,'2024-01-09 15:33:54'),(29,'invoice000017',1,1,500,0,500,'2023-12-06 10:13:08'),(30,'INV#018',1,1,800,0,800,'2023-12-14 10:15:23'),(31,'INV#00019',1,1,500,0,500,'2024-02-11 10:15:47'),(32,'INV#000020',1,1,700,0,700,'2024-02-12 10:25:54'),(33,'INV#000021',2,1,700,0,700,'2024-02-12 17:31:53');
 /*!40000 ALTER TABLE `sales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +366,7 @@ CREATE TABLE `sales_detail` (
   `price` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +375,7 @@ CREATE TABLE `sales_detail` (
 
 LOCK TABLES `sales_detail` WRITE;
 /*!40000 ALTER TABLE `sales_detail` DISABLE KEYS */;
-INSERT INTO `sales_detail` VALUES (28,26,1,1,700,'2024-02-11 08:38:23'),(29,27,1,1,700,'2024-02-11 09:03:36'),(30,28,2,1,800,'2024-02-11 09:03:54'),(31,29,1,1,500,'2024-02-12 03:43:08'),(32,30,2,1,800,'2024-02-12 03:45:23'),(33,31,1,1,500,'2024-02-12 03:45:47'),(34,32,6,1,700,'2024-02-12 03:55:54');
+INSERT INTO `sales_detail` VALUES (28,26,1,1,700,'2024-02-11 08:38:23'),(29,27,1,1,700,'2024-02-11 09:03:36'),(30,28,2,1,800,'2024-02-11 09:03:54'),(31,29,1,1,500,'2024-02-12 03:43:08'),(32,30,2,1,800,'2024-02-12 03:45:23'),(33,31,1,1,500,'2024-02-12 03:45:47'),(34,32,6,1,700,'2024-02-12 03:55:54'),(35,33,6,1,700,'2024-02-12 11:01:53');
 /*!40000 ALTER TABLE `sales_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -418,4 +472,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-12 10:29:02
+-- Dump completed on 2024-02-12 22:14:14
