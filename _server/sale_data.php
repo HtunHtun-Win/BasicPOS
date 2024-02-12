@@ -21,7 +21,7 @@ if (isset($_POST)) {
         $invPdo->execute();
         $invObj = $invPdo->fetchObject();
         $invNo = "";
-        for($digit=strlen(strval($invObj->no+1)); $digit<6; $digit++){
+        for($digit=strlen(strval($invObj->no+1)); $digit< $invObj->digit; $digit++){
             $invNo.="0";
         }
         $invoiceNo = $invObj->prefix.$invNo.($invObj->no+1);

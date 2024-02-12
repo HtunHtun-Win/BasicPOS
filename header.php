@@ -44,7 +44,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $url = $uri[0];
       ?>
       <ul class="navbar-nav ml-auto">
-        <?php if ($url != "/product_add_update") : ?>
+        <?php if ($url != "/product_add_update" and $url != "/shop" and $url != "/product_adjust" and $url != "/product_price_change" and $url != "/sales") : ?>
           <li class="nav-item">
             <div class="nav-link">
               <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)" autocomplete="off">
@@ -234,9 +234,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Shop Info -->
             <?php if ($_SESSION['user_role'] == 1) : ?>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/shop.php" class="nav-link">
                   <i class="nav-icon fas fa-building"></i>
-                  <p>Shop Info</p>
+                  <p>Shop</p>
                 </a>
               </li>
             <?php endif ?>

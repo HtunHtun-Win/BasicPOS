@@ -53,6 +53,7 @@ check_auth();
                       <?php foreach ($products as $product) : ?>
                         <option value="<?= $product->id ?>">
                           <?= $product->name ?>
+                          (<?= $product->code ?>)
                         </option>
                       <?php endforeach; ?>
                     </select>
