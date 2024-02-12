@@ -207,9 +207,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- income and expense -->
             <?php if ($_SESSION['user_role'] == 1) : ?>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/expense_manager.php" class="nav-link">
                   <i class="nav-icon fas fa-money-check-dollar"></i>
-                  <p>Income & Expanse</p>
+                  <p>Expense Manger</p>
                 </a>
               </li>
             <?php endif; ?>
