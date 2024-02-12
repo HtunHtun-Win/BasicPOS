@@ -18,7 +18,7 @@ check_auth();
                             <tr>
                                 <th width='50px'>No</th>
                                 <th width='150px'>Date</th>
-                                <th>Invoice No.</th>
+                                <th width='200px'>Invoice No.</th>
                                 <th>Customer Name</th>
                                 <th>Total</th>
                                 <th width='50px'>#</th>
@@ -41,15 +41,32 @@ check_auth();
 <!-- /.content-wrapper -->
 <script>
     //get voucher list
-    function loadDataList(search = '') {
-        if (search.length == 0) {
+    function loadDataList(search = '', date = '') {
+        date = document.getElementById('date').value;
+        if (date == "custom") {
+            date = document.getElementById('datepicker').value;
+        }
+        search = document.getElementById('search').value;
+        if (search.length == 0 && date.length == 0) {
             fetch("/reports/sale_voucher.php")
                 .then(res => res.text()).
             then(data => document.getElementById("v-list").innerHTML = data);
         } else {
-            fetch("/reports/sale_voucher.php?search=" + search)
-                .then(res => res.text()).
-            then(data => document.getElementById("v-list").innerHTML = data);
+            if (date.length != 0) {
+                if (search.length == 0) {
+                    fetch("/reports/sale_voucher.php?date=" + date)
+                        .then(res => res.text()).
+                    then(data => document.getElementById("v-list").innerHTML = data);
+                } else {
+                    fetch("/reports/sale_voucher.php?search=" + search + "&date=" + date)
+                        .then(res => res.text()).
+                    then(data => document.getElementById("v-list").innerHTML = data);
+                }
+            } else {
+                fetch("/reports/sale_voucher.php?search=" + search)
+                    .then(res => res.text()).
+                then(data => document.getElementById("v-list").innerHTML = data);
+            }
         }
     }
     //get voucher detail by id

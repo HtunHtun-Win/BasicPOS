@@ -25,6 +25,16 @@
     $(document).ready(function() {
       $('.sproduct').select2();
     });
+    //for custom date
+    var select = document.getElementById("date");
+    var datepickerContainer = document.getElementById("datepicker-container");
+    select.addEventListener("change", function() {
+      if (select.value === "custom") {
+        datepickerContainer.style.display = "inline";
+      } else {
+        datepickerContainer.style.display = "none";
+      }
+    });
   </script>
   </body>
 

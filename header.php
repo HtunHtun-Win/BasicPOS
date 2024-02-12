@@ -18,7 +18,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -44,10 +43,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $url = $uri[0];
       ?>
       <ul class="navbar-nav ml-auto">
+        <!-- date time filter -->
+        <?php if($url == "/sale_voucher" or str_contains($url, 'report') ): ?>
+          <li class="nav-item">
+            <div class="nav-link">
+              <select id="date" name="date" class="form-control" onclick="loadDataList('',this.value)">
+                <option value="">All</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thismonth">This Month</option>
+                <option value="lastmonth">Last Month</option>
+                <option value="thisyear">This Year</option>
+                <option value="lastyear">Last Year</option>
+                <option value="custom">Custom Date</option>
+              </select>
+              <div id="datepicker-container" style="display: none">
+                <input type="date" id="datepicker" name="datepicker" class="form-control" onmouseleave="loadDataList('',this.value)">
+              </div>
+            </div>
+          </li>
+        <?php endif; ?>
+        <!-- search bar filter -->
         <?php if ($url != "/product_add_update" and $url != "/shop" and $url != "/product_adjust" and $url != "/product_price_change" and $url != "/sales") : ?>
           <li class="nav-item">
             <div class="nav-link">
-              <input type="text" name="search" class="from-control" placeholder="Search..." onkeyup="loadDataList(this.value)" autocomplete="off">
+              <input type="text" name="search" class="form-control" placeholder="Search..." id="search" onkeyup="loadDataList(this.value)" autocomplete="off">
             </div>
           </li>
         <?php endif; ?>
