@@ -8,4 +8,5 @@ if($_GET['adj-item']){
     unset($_SESSION['price-item']);
 }else{
     unset($_SESSION['sale-item']);
+    unset($_SESSION['sale_id']);
 }

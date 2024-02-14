@@ -33,6 +33,16 @@
         }else{
             //update data
             $id = $_POST['id'];
+            $updateSql = "UPDATE income_expense SET amount=:amount, description=:description, note=:note, flow_type_id=:flow_type_id WHERE id=:id";
+            $updatePdo = $pdo->prepare($updateSql);
+            $updatePdo->execute([
+                ':amount' => $amount,
+                ':description' => $desc,
+                ':note' => $note,
+                ':flow_type_id' => $type,
+                ':id' => $id
+            ]);
+            echo "update_success";
         }
     }
 

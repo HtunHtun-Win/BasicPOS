@@ -2,6 +2,14 @@
 require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
+//get voucher info
+if (isset($_SESSION['sale_id'])) {
+  $sale_id = $_SESSION['sale_id'];
+  $sql = "SELECT * FROM sales WHERE id=$sale_id";
+  $pdostatement = $pdo->prepare($sql);
+  $pdostatement->execute();
+  $voucherData = $pdostatement->fetchObject();
+}
 ?>
 
 <!-- remove number arrow -->
@@ -34,7 +42,7 @@ check_auth();
     <div class="container-fluid">
       <div class="row">
         <!-- selected item list -->
-        <div class="col-md-9">
+        <div class="col-md-8">
           <div class="card">
             <div class="card-header">
 
@@ -83,8 +91,9 @@ check_auth();
           </div>
         </div>
         <!-- voucher info -->
-        <div class="col-md-3">
+        <div class="col-md-4">
           <form class="mt-1" id="sale-form">
+            <input type="hidden" name="sale_id" id="input_sale_id" value="<?= $sale_id ?>">
             <?php
             //get customer list
             $custSql = "SELECT * FROM customers WHERE id!=1 AND isdeleted=0 ORDER BY name";
@@ -97,7 +106,9 @@ check_auth();
               <select name="customerId" id="cid" class="form-control" onclick="viewAmount()">
                 <option value="1">DefaultCustomer</option>
                 <?php foreach ($customers as $customer) : ?>
-                  <option value="<?= $customer->id ?>"><?= $customer->name ?></option>
+                  <option value="<?= $customer->id ?>" <?php if ($voucherData->user_id == $customer->id) {
+                                                          echo "selected";
+                                                        } ?>><?= $customer->name ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
@@ -111,21 +122,24 @@ check_auth();
             </div>
             <div class="form-group">
               <label>Net Price</label>
-              <input type="text" class="form-control" disabled="disabled" name="netPrice" id="netPriceId">
+              <input type="text" class="form-control" disabled="disabled" name="netPrice" id="netPriceId" value="<?= $voucherData->net_price ?>">
             </div>
             <div class="form-group">
               <label>Discount</label>
-              <input type="number" class="form-control" value="0" name="discount" id="dis" onfocusout="viewAmount()">
+              <input type="number" class="form-control" name="discount" id="dis" onfocusout="viewAmount()" value="<?= $voucherData->discount ?? 0 ?>">
             </div>
             <div class="form-group">
               <label>Total Price</label>
-              <input type="text" class="form-control" disabled="disabled" name="totPrice" id="totPriceId">
+              <input type="text" class="form-control" disabled="disabled" name="totPrice" id="totPriceId" value="<?= $voucherData->total_price ?>">
             </div>
           </form>
         </div>
         <div class="act-button">
-          <button class="btn btn-warning mr-2" onclick="sitemClear('sale-item')">Clear All Item</button>
-          <button class="btn btn-primary" onclick="paid()">Paid</button>
+          <button class="btn btn-primary" onclick="update()" id="up_id">Update</button>
+          <button class="btn btn-primary" onclick="paid()" id="paid_id">Paid</button>
+          <button class="btn btn-warning mr-2" onclick="sitemClear('sale-item')">
+            Clear All Item
+          </button>
         </div>
       </div>
     </div>
@@ -227,11 +241,37 @@ check_auth();
       .then(viewAmount)
       .catch()
   }
+  //update
+  function update() {
+    document.getElementById("netPriceId").disabled = false;
+    document.getElementById("totPriceId").disabled = false;
+    const formData = new FormData(document.getElementById("sale-form"));
+    document.getElementById("netPriceId").disabled = true;
+    document.getElementById("totPriceId").disabled = true;
+    document.getElementById('input_sale_id').value = '';
+    fetch("/_actions/sale_voucher_update.php", {
+        method: "POST",
+        body: formData
+      })
+      .then(resp => resp.text())
+      .then(data => console.log(data))
+      .then(function() {
+        loadDataList();
+        btnChange();
+      })
+      .then(document.getElementById("dis").value = 0)
+      .then(viewAmount)
+      .catch()
+  }
   //clear selected items
   function sitemClear(str) {
+    document.getElementById('input_sale_id').value = '';
     fetch("/_actions/sitem_clear.php?" + str + "=1")
       .then(resp => resp.text())
-      .then(loadDataList())
+      .then(function() {
+        loadDataList();
+        btnChange();
+      })
       .then(document.getElementById("dis").value = 0)
       .catch()
   }
@@ -242,8 +282,22 @@ check_auth();
       .then(loadDataList())
       .catch()
   }
+  //button changes
+  function btnChange() {
+    var flag = document.getElementById('input_sale_id').value;
+    if (flag.length == 0) {
+      document.getElementById('paid_id').style.display = '';
+      document.getElementById('up_id').style.display = 'none';
+    } else {
+      document.getElementById('paid_id').style.display = 'none';
+      document.getElementById('up_id').style.display = '';
+    }
+  }
   //initial state
   window.onload = function() {
+    document.getElementById('up_id').style.display = 'none';
+    document.getElementById('paid_id').style.display = 'none';
+    btnChange();
     loadDataList();
   };
 </script>

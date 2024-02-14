@@ -3,11 +3,12 @@ require '../_actions/auth.php';
 require '../config/config.php';
 check_auth();
 $user_id = $_SESSION['user_id'];
+
 //add item
 if (isset($_POST)) {
-    if($_POST['customerId']){
+    if ($_POST['customerId']) {
         //sale voucher
-        if(!$_SESSION['sale-item']){
+        if (!$_SESSION['sale-item']) {
             die();
         }
         $customer_id = $_POST['customerId'];
@@ -21,10 +22,10 @@ if (isset($_POST)) {
         $invPdo->execute();
         $invObj = $invPdo->fetchObject();
         $invNo = "";
-        for($digit=strlen(strval($invObj->no+1)); $digit< $invObj->digit; $digit++){
-            $invNo.="0";
+        for ($digit = strlen(strval($invObj->no + 1)); $digit < $invObj->digit; $digit++) {
+            $invNo .= "0";
         }
-        $invoiceNo = $invObj->prefix.$invNo.($invObj->no+1);
+        $invoiceNo = $invObj->prefix . $invNo . ($invObj->no + 1);
         //insert sale voucher
         $saleSql = "INSERT INTO sales (sale_no,customer_id,user_id,net_price,discount,total_price) VALUES('$invoiceNo',$customer_id,$user_id,$netPrice,$discount,$totalPrice)";
         $salePdo = $pdo->prepare($saleSql);
@@ -43,7 +44,7 @@ if (isset($_POST)) {
         $svPdo = $pdo->prepare($svSql);
         $logSql = "INSERT INTO product_log(product_id,quantity,note,user_id) VALUES(:pid,:qty,:note,:user_id)";
         $logPdo = $pdo->prepare($logSql);
-        foreach($items as $id=>$value){
+        foreach ($items as $id => $value) {
             //inset sale detail
             $vDetailPdo->execute([
                 ':pid' => $id,
@@ -65,7 +66,7 @@ if (isset($_POST)) {
         }
         unset($_SESSION['sale-item']);
         die();
-    }else{
+    } else {
         $id = $_POST['item_id'];
         if ($id == 0) {
             $items = $_SESSION['sale-item'];

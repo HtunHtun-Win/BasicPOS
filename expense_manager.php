@@ -8,12 +8,12 @@ $roleSql = "SELECT * FROM roles";
 $rolePdo = $pdo->prepare($roleSql);
 $rolePdo->execute();
 $roles = $rolePdo->fetchAll(PDO::FETCH_OBJ);
-//get user info to edit
+//get expense info
 if ($_GET['id']) {
-  $ufSql = "SELECT * FROM users WHERE id=" . $_GET['id'];
-  $ufPdo = $pdo->prepare($ufSql);
-  $ufPdo->execute();
-  $userinfo = $ufPdo->fetchObject();
+  $sql = "SELECT * FROM income_expense WHERE id=" . $_GET['id'];
+  $pdostatement = $pdo->prepare($sql);
+  $pdostatement->execute();
+  $expInfo = $pdostatement->fetchObject();
 }
 ?>
 
@@ -28,30 +28,32 @@ if ($_GET['id']) {
         <div class="col-md-4 mt-3">
           <form id="myForm">
             <!-- id to edit -->
-            <input type="hidden" id="input_id" value="1">
+            <input type="hidden" name="id" id="input_id" value="<?= $expInfo->id ?>">
             <!-- choose type -->
             <div class="form-group">
               <input type="radio" name="type" value='1' id="in" checked>
               <label for="in">Income</label>
             </div>
             <div class="form-group">
-              <input type="radio" name="type" value='2' id="out">
+              <input type="radio" name="type" value='2' id="out" <?php if ($expInfo->flow_type_id == 2) {
+                                                                    echo "checked";
+                                                                  } ?>>
               <label for="out">Expense</label>
             </div>
             <!-- Description -->
             <div class="form-group">
               <label>Description</label>
-              <input type="text" name="desc" id="input_desc" class="form-control" value=''>
+              <input type="text" name="desc" id="input_desc" class="form-control" value="<?= $expInfo->description ?>">
             </div>
             <!-- Amount -->
             <div class="form-group">
               <label>Amount</label>
-              <input type="text" name="amount" id="input_amount" class="form-control" value=''>
+              <input type="number" name="amount" id="input_amount" class="form-control" value='<?= $expInfo->amount ?>'>
             </div>
             <!-- Note -->
             <div class="form-group">
               <label>Note</label>
-              <textarea name="note" id="input_note" class="form-control" rows="5"></textarea>
+              <textarea name="note" id="input_note" class="form-control" rows="5"><?= $expInfo->note ?></textarea>
             </div>
             <div class="float-right">
               <button type="button" class="btn btn-warning" onclick="clearForm()">Clear</button>
@@ -83,8 +85,10 @@ if ($_GET['id']) {
     }
   }
   //delete data by id
-  function deleteUser(id) {
-
+  function deleteExpense(id) {
+    fetch("/_actions/expense_delete.php?id=" + id)
+      .then(loadDataList())
+      .catch()
   }
   //post data to update and create
   function upload() {
@@ -103,6 +107,8 @@ if ($_GET['id']) {
           alert('Login_id must be unique!');
         } else if (data == 'success') {
           clearForm();
+        } else if (data == 'update_success') {
+          window.location.href = "/expense_manager.php";
         }
         loadDataList();
       })

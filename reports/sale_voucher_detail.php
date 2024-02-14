@@ -38,18 +38,20 @@ $no = 1;
     <hr>
     <div class="row">
         <div class="col-md-6">
-            Customer : <?= $customer->name ?>
-            <br>
-            Phone : <?= $customer->phone ?>
-            <br>
-            Address : <?= $customer->address ?>
+            <small>
+                Customer : <?= $customer->name ?>
+                <br>
+                Phone : <?= $customer->phone ?>
+                <br>
+                Address : <?= $customer->address ?>
+            </small>
         </div>
         <div class="col-md-6">
             Invoive-No : <?= $voucher->sale_no ?>
             <br>
-            Date: <?= $voucher->created_at ?>
-            <br>
             Sale Staff: <?= $user->name ?>
+            <br>
+            <small>Date: <?= $voucher->created_at ?></small>
         </div>
     </div>
     <!-- get items in voucher -->
@@ -65,7 +67,7 @@ $no = 1;
                 <th>No.</th>
                 <th>Item</th>
                 <th width="200px">Price</th>
-                <th width="230px">Amount</th>
+                <th width="250px">Amount</th>
             </tr>
         </thead>
         <tbody>
@@ -96,15 +98,10 @@ $no = 1;
                 <td>Total Amount</td>
                 <td><?= $voucher->total_price ?></td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <button class="btn btn-primary">Print</button>
-                    <button class="btn btn-primary">Save</button>
-                </td>
-            </tr>
         </tbody>
     </table>
+    <div class="float-right">
+        <button class="btn btn-primary">Print</button>
+        <button class="btn btn-primary">Save</button>
+    </div>
 </div>

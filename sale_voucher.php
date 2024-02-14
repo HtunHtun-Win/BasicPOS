@@ -22,6 +22,7 @@ check_auth();
                                 <th>Customer Name</th>
                                 <th>Total</th>
                                 <th width='50px'>#</th>
+                                <th width='50px'>#</th>
                             </tr>
                         </thead>
                         <tbody id="v-list">
@@ -55,25 +56,35 @@ check_auth();
             if (date.length != 0) {
                 if (search.length == 0) {
                     fetch("/reports/sale_voucher.php?date=" + date)
-                        .then(res => res.text()).
-                    then(data => document.getElementById("v-list").innerHTML = data);
+                        .then(res => res.text())
+                        .then(data => document.getElementById("v-list").innerHTML = data);
                 } else {
                     fetch("/reports/sale_voucher.php?search=" + search + "&date=" + date)
-                        .then(res => res.text()).
-                    then(data => document.getElementById("v-list").innerHTML = data);
+                        .then(res => res.text())
+                        .then(data => document.getElementById("v-list").innerHTML = data);
                 }
             } else {
                 fetch("/reports/sale_voucher.php?search=" + search)
-                    .then(res => res.text()).
-                then(data => document.getElementById("v-list").innerHTML = data);
+                    .then(res => res.text())
+                    .then(data => document.getElementById("v-list").innerHTML = data);
             }
         }
     }
     //get voucher detail by id
     function voucherDetail(id) {
         fetch("/reports/sale_voucher_detail.php?vid=" + id)
-            .then(res => res.text()).
-        then(data => document.getElementById("v-detail").innerHTML = data);
+            .then(res => res.text())
+            .then(data => document.getElementById("v-detail").innerHTML = data);
+    }
+    //voucher edit
+    function voucherEdit(id) {
+        fetch("/_actions/sale_voucher_edit.php?sale_id=" + id)
+            .then(res => res.text())
+            .then(data =>
+                setTimeout(() => {
+                    window.location.href = "/sales.php"
+                }, 500)
+            );
     }
     //init state
     window.onload = function() {

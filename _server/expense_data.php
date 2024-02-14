@@ -21,12 +21,12 @@ foreach ($totDatas as $totData) {
 //user list query
 if ($_GET['search']) {
     $search = $_GET['search'];
-    $expSql = "SELECT * FROM income_expense WHERE isdeleted=0 AND (description LIKE '%$search%' OR note LIKE '%$search%')";
+    $expSql = "SELECT * FROM income_expense WHERE isdeleted=0 AND (description LIKE '%$search%' OR note LIKE '%$search%') ORDER BY id DESC";
     $expPdo = $pdo->prepare($expSql);
     $expPdo->execute();
     $datas = $expPdo->fetchAll(PDO::FETCH_OBJ);
 } else {
-    $expSql = "SELECT * FROM income_expense WHERE isdeleted=0";
+    $expSql = "SELECT * FROM income_expense WHERE isdeleted=0 ORDER BY id DESC";
     $expPdo = $pdo->prepare($expSql);
     $expPdo->execute();
     $datas = $expPdo->fetchAll(PDO::FETCH_OBJ);
@@ -54,7 +54,7 @@ if ($_GET['search']) {
                 </div>
                 <div class="col-md-3">
                     <h5><?= $data->description ?></h6>
-                    <h6><?= date('Y-M-d', strtotime($data->created_at)) ?></h6>
+                        <h6><?= date('Y-M-d', strtotime($data->created_at)) ?></h6>
                 </div>
                 <div class="col-md-4">
                     <h5>
@@ -70,11 +70,11 @@ if ($_GET['search']) {
                 </div>
                 <div class="col-md-4">
                     <div class="float-right mt-1">
-                        <a href="#">
+                        <a href="expense_manager.php?id=<?= $data->id ?>">
                             <i class='fa fa-edit'></i>
                         </a>
                         &ensp;
-                        <a href="#">
+                        <a onclick="deleteExpense(<?= $data->id ?>)">
                             <i class='fa fa-trash'></i>
                         </a>
                         <h6>
