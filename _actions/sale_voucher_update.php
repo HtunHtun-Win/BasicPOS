@@ -30,7 +30,7 @@ if (isset($_POST)) {
         $upSql = "UPDATE sales_detail SET quantity=:qty, price=:price WHERE sales_id=:saleId AND product_id=:pid";
         $upPdo = $pdo->prepare($upSql);
         //Insert new product in existing voucher
-        $insDetailSql = "INSERT INTO sales_detail(sales_id,product_id,quantity,price) VALUES($sale_id,:pid,:qty,:price)";
+        $insDetailSql = "INSERT INTO sales_detail(sales_id,product_id,quantity,price,pprice) VALUES($sale_id,:pid,:qty,:price,:pprice)";
         $insDetailPdo = $pdo->prepare($insDetailSql);
         //Update product quantity and add log
         $svSql = "UPDATE products SET quantity=quantity+:qty WHERE id=:pid";
@@ -43,6 +43,9 @@ if (isset($_POST)) {
         //add remove log
         $rmLogSql = "INSERT INTO removed_item(sales_id,product_id) VALUES(:sale_id,:product_id)";
         $rmLogPdo = $pdo->prepare($rmLogSql);
+        //update purchase price quantity
+        $upPpriceSql = "UPDATE purchase_price SET quantity=quantity+:qty WHERE product_id=:pid AND price=:pprice ORDER BY id DESC LIMIT 1";
+        $upPpricePdo = $pdo->prepare($upPpriceSql);
         //get all product from sale voucher
         $getSql = "SELECT * FROM sales_detail WHERE sales_id=$sale_id";
         $getPdo = $pdo->prepare($getSql);
@@ -73,6 +76,12 @@ if (isset($_POST)) {
                 //add product and log
                 foreach($products as $product){
                     if($product['product_id']==$productId){
+                        //update purchase price quantity log
+                        $upPpricePdo->execute([
+                            ':qty' => $product['quantity'],
+                            ':pid' => $productId,
+                            ':pprice' => $product['pprice'],
+                        ]);
                         //update product quantity
                         $svPdo->execute([
                             ':qty' => $product['quantity'],
@@ -116,16 +125,80 @@ if (isset($_POST)) {
                                 ':note' => "sale item adjust",
                                 ':user_id' => $user_id
                             ]);
+                            //add purchase price quantity
+                            if ($adjQty > 0) {
+                                $upPpricePdo->execute([
+                                    ':qty' => $adjQty,
+                                    ':pid' => $pid,
+                                    ':pprice' => $product['pprice'],
+                                ]);
+                            } else {
+                                $selected_qty = abs($adjQty);
+                                while ($selected_qty > 0) {
+                                    //get purchase price
+                                    $ppSql = "SELECT quantity FROM purchase_price WHERE product_id=$pid AND quantity!=0 ORDER BY id DESC LIMIT 1";
+                                    $ppPdo = $pdo->prepare($ppSql);
+                                    $ppPdo->execute();
+                                    $pPrice = $ppPdo->fetchObject();
+                                    //
+                                    if ($pPrice->quantity >= $selected_qty) {
+                                        $upPpricePdo->execute([
+                                            ':qty' => -$selected_qty,
+                                            ':pid' => $pid,
+                                            ':pprice' => $product['pprice'],
+                                        ]);
+                                        $selected_qty = 0;
+                                    } else {
+                                        $upPpricePdo->execute([
+                                            ':qty' => -$pPrice->quantity,
+                                            ':pid' => $pid,
+                                            ':pprice' => $product['pprice'],
+                                        ]);
+                                        $selected_qty = $selected_qty - $pPrice->quantity;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }else{
                 //add new item to voucher
-                $insDetailPdo->execute([
-                    ':pid' => $pid,
-                    ':qty' => $value[0],
-                    ':price' => $value[1]
-                ]);
+                $selected_qty = $value[0];
+                while ($selected_qty > 0) {
+                    //get purchase price
+                    $ppSql = "SELECT quantity, price FROM purchase_price WHERE product_id=$pid AND quantity!=0 ORDER BY id LIMIT 1";
+                    $ppPdo = $pdo->prepare($ppSql);
+                    $ppPdo->execute();
+                    $pPrice = $ppPdo->fetchObject();
+                    //inset sale detail
+                    if ($pPrice->quantity >= $selected_qty) {
+                        $insDetailPdo->execute([
+                            ':pid' => $pid,
+                            ':qty' => $selected_qty,
+                            ':price' => $value[1],
+                            ':pprice' => $pPrice->price
+                        ]);
+                        $upPpricePdo->execute([
+                            ':qty' => -$selected_qty,
+                            ':pid' => $pid,
+                            ':pprice' => $pPrice->price
+                        ]);
+                        $selected_qty = 0;
+                    } else {
+                        $insDetailPdo->execute([
+                            ':pid' => $pid,
+                            ':qty' => $pPrice->quantity,
+                            ':price' => $value[1],
+                            ':pprice' => $pPrice->price
+                        ]);
+                        $upPpricePdo->execute([
+                            ':qty' => -$pPrice->quantity,
+                            ':pid' => $pid,
+                            ':pprice' => $pPrice->price
+                        ]);
+                        $selected_qty = $selected_qty - $pPrice->quantity;
+                    }
+                }
                 //update product quantity
                 $svPdo->execute([
                     ':qty' => -$value[0],
