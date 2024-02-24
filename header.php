@@ -44,7 +44,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       ?>
       <ul class="navbar-nav ml-auto">
         <!-- date time filter -->
-        <?php if($url == "/sale_voucher" or str_contains($url, 'report') ): ?>
+        <?php if ($url == "/sale_voucher" or $url == "/purchase_voucher" or str_contains($url, 'report')) : ?>
           <li class="nav-item">
             <div class="nav-link">
               <select id="date" name="date" class="form-control" onclick="loadDataList('',this.value)">
@@ -64,7 +64,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
         <?php endif; ?>
         <!-- search bar filter -->
-        <?php if ($url != "/product_add_update" and $url != "/shop" and $url != "/product_adjust" and $url != "/product_price_change" and $url != "/sales") : ?>
+        <?php if ($url != "/product_add_update" and $url != "/shop" and $url != "/product_adjust" and $url != "/product_price_change" and $url != "/sales" and $url != "/purchase") : ?>
           <li class="nav-item">
             <div class="nav-link">
               <input type="text" name="search" class="form-control" placeholder="Search..." id="search" onkeyup="loadDataList(this.value)" autocomplete="off">
@@ -121,7 +121,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <!-- Purchase -->
             <?php if ($_SESSION['user_role'] != 2) : ?>
-              <li class="nav-item">
+              <li class="nav-item <?php if (str_contains($url, 'purchase')) {
+                                      echo 'menu-open';
+                                    } ?>">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-sack-dollar"></i>
                   <p>
@@ -131,12 +133,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Purchase</a>
+                    <a href="/purchase.php" class="nav-link">Purchase</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Purchase Vouchers</a>
+                    <a href="/purchase_voucher.php" class="nav-link">Purchase Vouchers</a>
                   </li>
                 </ul>
               </li>

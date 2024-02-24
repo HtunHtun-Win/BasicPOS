@@ -6,7 +6,10 @@ if($_GET['adj-item']){
     unset($_SESSION['sitem']);
 }else if($_GET['price-item']){
     unset($_SESSION['price-item']);
-}else{
+}else if($_GET['sale-item']){
     unset($_SESSION['sale-item']);
     unset($_SESSION['sale_id']);
+}else{
+    unset($_SESSION['purchase-item']);
+    unset($_SESSION['purchase_id']);
 }

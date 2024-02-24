@@ -119,7 +119,6 @@ if ($_GET['id']) {
                 } else if(data == 'update'){
                     window.location.href="../product.php";
                 }
-
             })
             .catch(function(error) {
                 console.error(error);

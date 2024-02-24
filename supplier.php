@@ -40,7 +40,7 @@ if ($_GET['id']) {
             </div>
             <div class='from-group mt-3'>
               <label>Phone</label>
-              <input type="number" name="phone" id="input_phone" class='form-control' value="<?= $custInfo->phone ?>" required>
+              <input type="text" name="phone" id="input_phone" class='form-control' value="<?= $custInfo->phone ?>" required>
             </div>
             <div class='from-group mt-3'>
               <label>Address</label>

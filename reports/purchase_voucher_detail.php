@@ -5,12 +5,12 @@ check_auth();
 //get voucher info
 if ($_GET) {
     $vid = $_GET['vid'];
-    $vinfoSql = "SELECT * FROM sales WHERE id=$vid";
+    $vinfoSql = "SELECT * FROM purchase WHERE id=$vid";
     $vinfoPdo = $pdo->prepare($vinfoSql);
     $vinfoPdo->execute();
     $voucher = $vinfoPdo->fetchObject();
     //get customer name
-    $custSql = "SELECT * FROM customers WHERE id=$voucher->customer_id";
+    $custSql = "SELECT * FROM suppliers WHERE id=$voucher->supplier_id";
     $custPdo = $pdo->prepare($custSql);
     $custPdo->execute();
     $customer = $custPdo->fetchObject();
@@ -47,7 +47,7 @@ $no = 1;
             </small>
         </div>
         <div class="col-md-6">
-            Invoive-No : <?= $voucher->sale_no ?>
+            Invoive-No : <?= $voucher->purchase_no ?>
             <br>
             Sale Staff: <?= $user->name ?>
             <br>
@@ -56,7 +56,7 @@ $no = 1;
     </div>
     <!-- get items in voucher -->
     <?php
-    $itemSql = "SELECT products.name,SUM(sales_detail.quantity) as quantity,sales_detail.price FROM sales_detail LEFT JOIN products ON sales_detail.product_id=products.id WHERE sales_detail.sales_id=$vid GROUP BY sales_detail.product_id";
+    $itemSql = "SELECT products.name,purchase_detail.quantity,purchase_detail.price FROM purchase_detail LEFT JOIN products ON purchase_detail.product_id=products.id WHERE purchase_detail.purchase_id=$vid";
     $itemPdo = $pdo->prepare($itemSql);
     $itemPdo->execute();
     $items = $itemPdo->fetchAll(PDO::FETCH_OBJ);

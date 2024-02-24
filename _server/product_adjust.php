@@ -27,6 +27,10 @@ if ($_GET) {
         $svPdo = $pdo->prepare($svSql);
         $logSql = "INSERT INTO product_log(product_id,quantity,note,user_id) VALUES(:pid,:qty,:note,:user_id)";
         $logPdo = $pdo->prepare($logSql);
+        //update purchase price quantity
+        $upPpriceSql = "UPDATE purchase_price SET quantity=quantity+:qty WHERE product_id=:pid AND quantity!=0 ORDER BY id DESC LIMIT 1";
+        $upPpricePdo = $pdo->prepare($upPpriceSql);
+        //execute
         foreach($items as $id => $qty){
             $svPdo->execute([
                 ':qty' => $qty,
@@ -38,6 +42,36 @@ if ($_GET) {
                 ':note' => "adjust",
                 ':user_id' => $user_id
             ]);
+            //purchase price qty change
+            if($qty > 0){
+                $upPpricePdo->execute([
+                    ':qty' => $qty,
+                    ':pid' => $id
+                ]);
+            }else{
+                $selected_qty = abs($qty);
+                while($selected_qty > 0){
+                    //get purchase price
+                    $ppSql = "SELECT quantity FROM purchase_price WHERE product_id=$id AND quantity!=0 ORDER BY id DESC LIMIT 1";
+                    $ppPdo = $pdo->prepare($ppSql);
+                    $ppPdo->execute();
+                    $pPrice = $ppPdo->fetchObject();
+                    //
+                    if ($pPrice->quantity >= $selected_qty) {
+                        $upPpricePdo->execute([
+                            ':qty' => -$selected_qty,
+                            ':pid' => $id
+                        ]);
+                        $selected_qty = 0;
+                    } else {
+                        $upPpricePdo->execute([
+                            ':qty' => -$pPrice->quantity,
+                            ':pid' => $id
+                        ]);
+                        $selected_qty = $selected_qty - $pPrice->quantity;
+                    }
+                }
+            }
         }
         unset($_SESSION['adj-item']);
         die();

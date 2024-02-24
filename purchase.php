@@ -3,9 +3,9 @@ require '_actions/auth.php';
 require 'config/config.php';
 check_auth();
 //get voucher info
-if (isset($_SESSION['sale_id'])) {
-  $sale_id = $_SESSION['sale_id'];
-  $sql = "SELECT * FROM sales WHERE id=$sale_id";
+if (isset($_SESSION['purchase_id'])) {
+  $purchase_id = $_SESSION['purchase_id'];
+  $sql = "SELECT * FROM purchase WHERE id=$purchase_id";
   $pdostatement = $pdo->prepare($sql);
   $pdostatement->execute();
   $voucherData = $pdostatement->fetchObject();
@@ -51,7 +51,7 @@ if (isset($_SESSION['sale_id'])) {
                   <div class="col-md-6">
                     <!-- get product list -->
                     <?php
-                    $pSql = "SELECT * FROM products WHERE isdeleted=0 AND quantity>0";
+                    $pSql = "SELECT * FROM products WHERE isdeleted=0";
                     $pPdo = $pdo->prepare($pSql);
                     $pPdo->execute();
                     $products = $pPdo->fetchall(PDO::FETCH_OBJ);
@@ -93,22 +93,22 @@ if (isset($_SESSION['sale_id'])) {
         <!-- voucher info -->
         <div class="col-md-4">
           <form class="mt-1" id="sale-form">
-            <input type="hidden" name="sale_id" id="input_sale_id" value="<?= $sale_id ?>">
+            <input type="hidden" name="purchase_id" id="input_purchase_id" value="<?= $purchase_id ?>">
             <?php
             //get customer list
-            $custSql = "SELECT * FROM customers WHERE id!=1 AND isdeleted=0 ORDER BY name";
-            $custPdo = $pdo->prepare($custSql);
-            $custPdo->execute();
-            $customers = $custPdo->fetchAll(PDO::FETCH_OBJ);
+            $suppSql = "SELECT * FROM suppliers WHERE id!=1 AND isdeleted=0 ORDER BY name";
+            $suppPdo = $pdo->prepare($suppSql);
+            $suppPdo->execute();
+            $suppliers = $suppPdo->fetchAll(PDO::FETCH_OBJ);
             ?>
             <div class="form-group">
-              <label>CustomerName</label>
-              <select name="customerId" id="cid" class="form-control" onclick="viewAmount()">
-                <option value="1">DefaultCustomer</option>
-                <?php foreach ($customers as $customer) : ?>
-                  <option value="<?= $customer->id ?>" <?php if ($voucherData->customer_id == $customer->id) {
+              <label>SupplierName</label>
+              <select name="supplierId" id="sid" class="form-control" onclick="viewAmount()">
+                <option value="1">DefaultSupplier</option>
+                <?php foreach ($suppliers as $supplier) : ?>
+                  <option value="<?= $supplier->id ?>" <?php if ($voucherData->user_id == $supplier->id) {
                                                           echo "selected";
-                                                        } ?>><?= $customer->name ?></option>
+                                                        } ?>><?= $supplier->name ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
@@ -136,8 +136,8 @@ if (isset($_SESSION['sale_id'])) {
         </div>
         <div class="act-button">
           <button class="btn btn-primary" onclick="update()" id="up_id">Update</button>
-          <button class="btn btn-primary" onclick="paid()" id="paid_id">Paid</button>
-          <button class="btn btn-warning mr-2" onclick="sitemClear('sale-item')">
+          <button class="btn btn-primary" onclick="save()" id="paid_id">Save</button>
+          <button class="btn btn-warning mr-2" onclick="sitemClear('purchase-item')">
             Clear All Item
           </button>
         </div>
@@ -151,7 +151,7 @@ if (isset($_SESSION['sale_id'])) {
 <script>
   //get product list
   function loadDataList() {
-    fetch("/_server/sale_data.php")
+    fetch("/_server/purchase_data.php")
       .then(resp => resp.text())
       .then(data => document.getElementById("product_data").innerHTML = data)
       .then((dd) => {
@@ -164,7 +164,7 @@ if (isset($_SESSION['sale_id'])) {
   //add item
   function addItem() {
     const formData = new FormData(document.getElementById("item-form"));
-    fetch("/_server/sale_data.php", {
+    fetch("/_server/purchase_data.php", {
         method: "post",
         body: formData
       })
@@ -179,7 +179,7 @@ if (isset($_SESSION['sale_id'])) {
     if (qty <= 0) {
       qty = 1;
     }
-    fetch("/_server/sale_data.php?id=" + id + "&qty=" + qty)
+    fetch("/_server/purchase_data.php?id=" + id + "&qty=" + qty)
       .then(resp => resp.text())
       .then(loadDataList)
       .then(viewAmount)
@@ -190,7 +190,7 @@ if (isset($_SESSION['sale_id'])) {
     if (price < 0) {
       price = 0;
     }
-    fetch("/_server/sale_data.php?id=" + id + "&price=" + price)
+    fetch("/_server/purchase_data.php?id=" + id + "&price=" + price)
       .then(resp => resp.text())
       .then(loadDataList)
       .then(viewAmount)
@@ -199,13 +199,13 @@ if (isset($_SESSION['sale_id'])) {
   //user view total amount
   function viewAmount() {
     //for customer selection
-    let cust = <?= json_encode($customers) ?>; //customer list
-    let cid = Number(document.getElementById("cid").value);
+    let cust = <?= json_encode($suppliers) ?>; //customer list
+    let sid = Number(document.getElementById("sid").value);
     cust.forEach(element => {
-      if (element.id == cid) {
+      if (element.id == sid) {
         document.getElementById("phone").value = element.phone;
         document.getElementById("address").value = element.address;
-      } else if (cid == 1) {
+      } else if (sid == 1) {
         document.getElementById("phone").value = "-";
         document.getElementById("address").value = "-";
       }
@@ -224,13 +224,13 @@ if (isset($_SESSION['sale_id'])) {
     document.getElementById("totPriceId").value = totPrice;
   }
   //paid
-  function paid() {
+  function save() {
     document.getElementById("netPriceId").disabled = false;
     document.getElementById("totPriceId").disabled = false;
     const formData = new FormData(document.getElementById("sale-form"));
     document.getElementById("netPriceId").disabled = true;
     document.getElementById("totPriceId").disabled = true;
-    fetch("/_server/sale_data.php", {
+    fetch("/_server/purchase_data.php", {
         method: "POST",
         body: formData
       })
@@ -248,7 +248,7 @@ if (isset($_SESSION['sale_id'])) {
     const formData = new FormData(document.getElementById("sale-form"));
     document.getElementById("netPriceId").disabled = true;
     document.getElementById("totPriceId").disabled = true;
-    document.getElementById('input_sale_id').value = '';
+    document.getElementById('input_purchase_id').value = '';
     fetch("/_actions/sale_voucher_update.php", {
         method: "POST",
         body: formData
@@ -265,7 +265,7 @@ if (isset($_SESSION['sale_id'])) {
   }
   //clear selected items
   function sitemClear(str) {
-    document.getElementById('input_sale_id').value = '';
+    document.getElementById('input_purchase_id').value = '';
     fetch("/_actions/sitem_clear.php?" + str + "=1")
       .then(resp => resp.text())
       .then(function() {
@@ -284,7 +284,7 @@ if (isset($_SESSION['sale_id'])) {
   }
   //button changes
   function btnChange() {
-    var flag = document.getElementById('input_sale_id').value;
+    var flag = document.getElementById('input_purchase_id').value;
     if (flag.length == 0) {
       document.getElementById('paid_id').style.display = '';
       document.getElementById('up_id').style.display = 'none';
