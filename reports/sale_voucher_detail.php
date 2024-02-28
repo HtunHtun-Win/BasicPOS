@@ -86,17 +86,32 @@ $no = 1;
                 <td>Net Amount</td>
                 <td><?= $voucher->net_price ?></td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>Discount</td>
-                <td><?= $voucher->discount ?></td>
-            </tr>
+            <?php if($voucher->discount!=0): ?>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Discount</td>
+                    <td><?= $voucher->discount ?></td>
+                </tr>
+            <?php endif; ?>
             <tr>
                 <td></td>
                 <td></td>
                 <td>Total Amount</td>
                 <td><?= $voucher->total_price ?></td>
+            </tr>
+            <tr>
+                <!-- get payment name -->
+                <?php
+                    $getNameSql = "SELECT name FROM payment_type WHERE id=$voucher->payment_type_id";
+                    $getNamePdo = $pdo->prepare($getNameSql);
+                    $getNamePdo->execute();
+                    $payment = $getNamePdo->fetchObject();
+                ?>
+                <td></td>
+                <td></td>
+                <td>PaymentType</td>
+                <td><?= $payment->name ?></td>
             </tr>
         </tbody>
     </table>

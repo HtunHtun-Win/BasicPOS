@@ -40,7 +40,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Right navbar links -->
       <?php
       $uri = explode('.', $_SERVER['REQUEST_URI']);
-      $url = trim($uri[0],"/");
+      $url = trim($uri[0], "/");
       ?>
       <ul class="navbar-nav ml-auto">
         <!-- date time filter -->
@@ -49,7 +49,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="nav-link">
               <select id="date" name="date" class="form-control" onclick="loadDataList('',this.value)">
                 <option value="">All</option>
-                <option value="today">Today</option>
+                <option value="today" selected>Today</option>
                 <option value="yesterday">Yesterday</option>
                 <option value="thismonth">This Month</option>
                 <option value="lastmonth">Last Month</option>
@@ -65,12 +65,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <?php endif; ?>
         <!-- date time fliter for Report -->
         <input type="hidden" id="typeId" value="sale-item">
-        <?php if (str_contains($url,"report")) : ?>
+        <?php if (str_contains($url, "report")) : ?>
           <li class="nav-item">
             <div class="nav-link">
-              <select id="dateId" name="date" class="form-control" onclick="loadDataList(getType(),this.value)">
+              <select id="date" name="date" class="form-control" onclick="loadDataList(getType(),this.value)">
                 <option value="">All</option>
-                <option value="today">Today</option>
+                <option value="today" selected>Today</option>
                 <option value="yesterday">Yesterday</option>
                 <option value="thismonth">This Month</option>
                 <option value="lastmonth">Last Month</option>
@@ -79,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <option value="custom">Custom Date</option>
               </select>
               <div id="datepicker-container" style="display: none">
-                <input type="date" id="datepicker" name="datepicker" class="form-control" onmouseleave="loadDataList('',this.value)">
+                <input type="date" id="datepicker" name="datepicker" class="form-control" onmouseleave="loadDataList(getType(),this.value)">
               </div>
             </div>
           </li>

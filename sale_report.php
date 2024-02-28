@@ -59,7 +59,7 @@ check_auth();
           .then(data => document.getElementById("info-area").innerHTML = data);
       }
       document.getElementById('typeId').value = report;
-    } else if (report == 'sale-by-customer') {
+    } else if (report == 'sale-by-customer') { //sale by customer
       if (date.length == 0) {
         fetch("/reports/sales/sale_by_customer.php")
           .then(resp => resp.text())
@@ -77,9 +77,26 @@ check_auth();
   function getType() {
     return document.getElementById('typeId').value;
   }
+  //customer filter
+  function filterCustomer() {
+    var customer = document.getElementById('customer').value;
+    var date = document.getElementById('date').value;
+    if (date) {
+      fetch("/reports/sales/sale_by_customer.php?customer=" + customer+"&date="+date)
+        .then(resp => resp.text())
+        .then(data => document.getElementById('info-area').innerHTML = data)
+        .catch()
+    } else {
+      fetch("/reports/sales/sale_by_customer.php?customer=" + customer)
+        .then(resp => resp.text())
+        .then(data => document.getElementById('info-area').innerHTML = data)
+        .catch()
+    }
+
+  }
   //init state
   window.onload = function() {
-    loadDataList('sale-item');
+    loadDataList('sale-item', 'today');
   }
 </script>
 <?php

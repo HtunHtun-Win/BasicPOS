@@ -101,24 +101,31 @@ if (isset($_SESSION['sale_id'])) {
             $custPdo->execute();
             $customers = $custPdo->fetchAll(PDO::FETCH_OBJ);
             ?>
-            <div class="form-group">
-              <label>CustomerName</label>
-              <select name="customerId" id="cid" class="form-control" onclick="viewAmount()">
-                <option value="1">DefaultCustomer</option>
-                <?php foreach ($customers as $customer) : ?>
-                  <option value="<?= $customer->id ?>" <?php if ($voucherData->customer_id == $customer->id) {
-                                                          echo "selected";
-                                                        } ?>><?= $customer->name ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Phone</label>
-              <input type="text" class="form-control" id="phone" disabled>
-            </div>
-            <div class="form-group">
-              <label>Address</label>
-              <input type="address" class="form-control" id="address" disabled>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>CustomerName</label>
+                  <select name="customerId" id="cid" class="form-control" onclick="viewAmount()">
+                    <option value="1">DefaultCustomer</option>
+                    <?php foreach ($customers as $customer) : ?>
+                      <option value="<?= $customer->id ?>" <?php if ($voucherData->customer_id == $customer->id) {
+                                                              echo "selected";
+                                                            } ?>><?= $customer->name ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" class="form-control" id="phone" disabled>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Address</label>
+                  <!-- <input type="address" class="form-control" id="address" disabled> -->
+                  <textarea id="address" class="form-control" cols="30" rows="5" disabled></textarea>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label>Net Price</label>
@@ -131,6 +138,21 @@ if (isset($_SESSION['sale_id'])) {
             <div class="form-group">
               <label>Total Price</label>
               <input type="text" class="form-control" disabled="disabled" name="totPrice" id="totPriceId" value="<?= $voucherData->total_price ?>">
+            </div>
+            <div class="form-group">
+              <label>Payment Type</label>
+              <!-- get payment type -->
+              <?php
+              $paymentSql = "SELECT * FROM payment_type";
+              $paymentPdo = $pdo->prepare($paymentSql);
+              $paymentPdo->execute();
+              $paymentTypes = $paymentPdo->fetchAll(PDO::FETCH_OBJ);
+              ?>
+              <select class="form-control" name="paymentType">
+                <?php foreach ($paymentTypes as $paymentType) : ?>
+                  <option value="<?= $paymentType->id ?>"><?= $paymentType->name ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
           </form>
         </div>
