@@ -3,7 +3,9 @@ require '../_actions/auth.php';
 require '../config/config.php';
 check_auth();
 $user_id = $_SESSION['user_id'];
-
+//get current product quantity
+$getQty = "SELECT quantity FROM products WHERE id=:id";
+$getQtyPdo = $pdo->prepare($getQty);
 //add item
 if (isset($_POST)) {
     if ($_POST['customerId']) {
@@ -112,7 +114,14 @@ if (isset($_POST)) {
             $_SESSION['sale-item'][$id] = [1, $price->sale_price];
             $items = $_SESSION['sale-item'];
         } else {
-            $_SESSION['sale-item'][$id][0] += 1;
+            //execute to get product quantity
+            $getQtyPdo->execute([':id' => $id]);
+            $product_qty = $getQtyPdo->fetchObject();
+            $temp_qty = $_SESSION['sale-item'][$id][0];
+            //increase 1 in existing product in cart
+            if ($product_qty->quantity > $temp_qty) {
+                $_SESSION['sale-item'][$id][0] += 1;
+            }
             $items = $_SESSION['sale-item'];
         }
     }
@@ -131,7 +140,15 @@ if ($_GET) {
         //add quantity
         $pid = $_GET['id']; // product id
         $temp_qty = $_GET['qty']; // product quantity
-        $_SESSION['sale-item'][$pid][0] = $temp_qty;
+        //execute to get product quantity
+        $getQtyPdo->execute([':id'=>$pid]);
+        $product_qty = $getQtyPdo->fetchObject();
+        if($product_qty->quantity < $temp_qty){
+            $_SESSION['sale-item'][$pid][0] = $product_qty->quantity;
+        }else{
+            $_SESSION['sale-item'][$pid][0] = $temp_qty;
+        }
+            
     }
 }
 
