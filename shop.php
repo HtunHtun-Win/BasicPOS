@@ -15,6 +15,7 @@ check_auth();
         <div class="col-md-4 mt-2">
           <a class="btn btn-default btn-block" onclick="loadShopInfo()">Shop Info</a>
           <a class="btn btn-default btn-block" onclick="loadVoucherData(1)">Voucher Info</a>
+          <a class="btn btn-default btn-block" onclick="">Payment Type</a>
         </div>
         <div class="col-md-4">
           <div id="info-area"></div>

@@ -62,6 +62,7 @@ if (isset($_SESSION['sale_id'])) {
                         <option value="<?= $product->id ?>">
                           <?= $product->name ?>
                           (<?= $product->code ?>)
+                          (<?= $product->quantity ?> pcs)
                         </option>
                       <?php endforeach; ?>
                     </select>

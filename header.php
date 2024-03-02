@@ -63,6 +63,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
           </li>
         <?php endif; ?>
+        <!-- search bar for price Change -->
+        <?php if ($url == "inventory_report") : ?>
+          <li class="nav-item" id="price-search">
+            <div class="nav-link">
+              <input type="text" name="search" class="form-control" placeholder="Search..." id="search" onkeyup="loadDataList(getType(),'',search=this.value)" autocomplete="off">
+            </div>
+          </li>
+        <?php endif; ?>
         <!-- date time fliter for Report -->
         <input type="hidden" id="typeId" value="sale-item">
         <?php if (str_contains($url, "report")) : ?>
@@ -100,7 +108,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="/sales.php" class="brand-link">
-        <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="dist/img/basic.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BasicPOS</span>
       </a>
 
@@ -260,7 +268,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <?php if ($_SESSION['user_role'] == 1) : ?>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Inventory Reports</a>
+                    <a href="inventory_report.php" class="nav-link">Inventory Reports</a>
                   </li>
                 </ul>
                 <ul class="nav nav-treeview">
