@@ -78,9 +78,9 @@ $no = 1;
                 </a>
             </td>
             <td>
-                <a onclick="voucherEdit(<?= $voucher->id ?>)">
+                <!-- <a onclick="voucherEdit(<?= $voucher->id ?>)" id="purchase_edit">
                     <i class="fa-regular fa-edit"></i>
-                </a>
+                </a> -->
             </td>
         </tr>
     <?php $no++;
