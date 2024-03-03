@@ -34,21 +34,16 @@ if ($_GET) { //filter
         $getPdo = $pdo->prepare($getSql);
         $getPdo->execute();
         $saleitems = $getPdo->fetchAll(PDO::FETCH_OBJ);
-        // get purchase discount by date
-        $getPdiscount = "SELECT SUM(discount) AS discount FROM purchase WHERE created_at>'$startDate' AND created_at<'$stopDate'";
-        $getPdiscoutPdo = $pdo->prepare($getPdiscount);
-        $getPdiscoutPdo->execute();
-        $purchaseDiscount = $getPdiscoutPdo->fetchObject();
         // get other income by date
         $getIncome = "SELECT SUM(amount) AS amount FROM income_expense WHERE flow_type_id=1 AND isdeleted=0 AND created_at>'$startDate' AND created_at<'$stopDate'";
         $getIncomePdo = $pdo->prepare($getIncome);
         $getIncomePdo->execute();
         $income = $getIncomePdo->fetchObject();
-        // get sale discount by date
-        $getSdiscount = "SELECT SUM(discount) AS discount FROM sales WHERE created_at>'$startDate' AND created_at<'$stopDate'";
-        $getSdiscoutPdo = $pdo->prepare($getSdiscount);
-        $getSdiscoutPdo->execute();
-        $saleDiscount = $getSdiscoutPdo->fetchObject();
+        //get purchase price by date
+        $getPchSql = "SELECT SUM(total_price) as price FROM purchase WHERE created_at>'$startDate' AND created_at<'$stopDate'";
+        $getPchPdo = $pdo->prepare($getPchSql);
+        $getPchPdo->execute();
+        $purchasePrice = $getPchPdo->fetchObject();
         // get other expense by date
         $getExpense = "SELECT SUM(amount) AS amount FROM income_expense WHERE flow_type_id=2 AND isdeleted=0 AND created_at>'$startDate' AND created_at<'$stopDate'";
         $getExpensePdo = $pdo->prepare($getExpense);
@@ -61,21 +56,16 @@ if ($_GET) { //filter
     $getPdo = $pdo->prepare($getSql);
     $getPdo->execute();
     $saleitems = $getPdo->fetchAll(PDO::FETCH_OBJ);
-    // get all purchase discount
-    $getPdiscount = "SELECT SUM(discount) AS discount FROM purchase";
-    $getPdiscoutPdo = $pdo->prepare($getPdiscount);
-    $getPdiscoutPdo->execute();
-    $purchaseDiscount = $getPdiscoutPdo->fetchObject();
     // get all other income
     $getIncome = "SELECT SUM(amount) AS amount FROM income_expense WHERE flow_type_id=1 AND isdeleted=0";
     $getIncomePdo = $pdo->prepare($getIncome);
     $getIncomePdo->execute();
     $income = $getIncomePdo->fetchObject();
-    // get all sale discount
-    $getSdiscount = "SELECT SUM(discount) AS discount FROM sales";
-    $getSdiscoutPdo = $pdo->prepare($getSdiscount);
-    $getSdiscoutPdo->execute();
-    $saleDiscount = $getSdiscoutPdo->fetchObject();
+    //get purchase price
+    $getPchSql = "SELECT SUM(total_price) as price FROM purchase";
+    $getPchPdo = $pdo->prepare($getPchSql);
+    $getPchPdo->execute();
+    $purchasePrice = $getPchPdo->fetchObject();
     // get all other expense
     $getExpense = "SELECT SUM(amount) AS amount FROM income_expense WHERE flow_type_id=2 AND isdeleted=0";
     $getExpensePdo = $pdo->prepare($getExpense);
@@ -85,10 +75,10 @@ if ($_GET) { //filter
 $totalSalePrice = 0;
 $totalCapitalPrice = 0;
 //
-$_SESSION['report'] = 'profit-lose';
+$_SESSION['report'] = 'cash-flow';
 //
 ?>
-<h4 style="color:Green;">Profit</h4>
+<h4 style="color:Green;">Cash In</h4>
 <table class="table">
     <thead class="thead-dark">
         <th width="100">No</th>
@@ -110,32 +100,22 @@ $_SESSION['report'] = 'profit-lose';
         </tr>
         <tr>
             <td>2</td>
-            <td>Capital Price</td>
-            <td>(<?= $totalCapitalPrice ?>)</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Purchase Discount</td>
-            <td><?= $purchaseDiscount->discount ?? 0 ?></td>
-        </tr>
-        <tr>
-            <td>4</td>
             <td>Other Income</td>
             <td><?= $income->amount ?? 0 ?></td>
         </tr>
         <tr class="table-active">
             <td colspan="2">
                 <center>
-                    <b>Total Profit</b>
+                    <b>Total Cash In</b>
                 </center>
             </td>
-            <td><b><?= ($totalSalePrice + $purchaseDiscount->discount + $income->amount) - $totalCapitalPrice ?></b></td>
+            <td><b><?= ($totalSalePrice + $income->amount) ?></b></td>
         </tr>
     </tbody>
 </table>
 
 <!-- lose section -->
-<h4 style="color:Red;">Lose</h4>
+<h4 style="color:Red;">Cash Out</h4>
 <table class="table">
     <thead class="thead-dark">
         <th width="100">No</th>
@@ -145,8 +125,8 @@ $_SESSION['report'] = 'profit-lose';
     <tbody>
         <tr>
             <td>1</td>
-            <td>Sale Discount</td>
-            <td><?= $saleDiscount->discount ?? 0 ?></td>
+            <td>Purchase</td>
+            <td><?= $purchasePrice->price ?? 0 ?></td>
         </tr>
         <tr>
             <td>2</td>
@@ -156,10 +136,10 @@ $_SESSION['report'] = 'profit-lose';
         <tr class="table-active">
             <td colspan="2">
                 <center>
-                    <b>Total Lose</b>
+                    <b>Total Cash Out</b>
                 </center>
             </td>
-            <td><b>(<?= $saleDiscount->discount + $expense->amount ?>)</b></td>
+            <td><b>(<?= $purchasePrice->price + $expense->amount ?>)</b></td>
         </tr>
     </tbody>
 </table>

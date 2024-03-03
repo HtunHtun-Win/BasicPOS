@@ -15,7 +15,7 @@ check_auth();
         <div class="col-md-4 mt-2">
           <a class="btn btn-default btn-block" onclick="loadShopInfo()">Shop Info</a>
           <a class="btn btn-default btn-block" onclick="loadVoucherData(1)">Voucher Info</a>
-          <a class="btn btn-default btn-block" onclick="">Payment Type</a>
+          <a class="btn btn-default btn-block" onclick="loadPayment()">Payment Type</a>
         </div>
         <div class="col-md-4">
           <div id="info-area"></div>
@@ -61,6 +61,13 @@ check_auth();
         body: formData
       })
       .then(resp => resp.data())
+      .catch()
+  }
+  //load payment type
+  function loadPayment() {
+    fetch("/_server/payment_data.php")
+      .then(resp => resp.text())
+      .then(data => document.getElementById('info-area').innerHTML = data)
       .catch()
   }
   //init state

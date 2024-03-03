@@ -78,7 +78,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="nav-link">
               <select id="date" name="date" class="form-control" onclick="loadDataList(getType(),this.value)">
                 <option value="">All</option>
-                <option value="today" selected>Today</option>
+                <option value="today">Today</option>
                 <option value="yesterday">Yesterday</option>
                 <option value="thismonth">This Month</option>
                 <option value="lastmonth">Last Month</option>
