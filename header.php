@@ -72,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
         <?php endif; ?>
         <!-- date time fliter for Report -->
-        <input type="hidden" id="typeId" value="sale-item">
+        <input type="hidden" id="typeId" value="profit-lose">
         <?php if (str_contains($url, "report")) : ?>
           <li class="nav-item">
             <div class="nav-link">
@@ -273,7 +273,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">Financial Reports</a>
+                    <a href="finical_report.php" class="nav-link">Financial Reports</a>
                   </li>
                 </ul>
               <?php endif; ?>
