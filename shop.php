@@ -17,10 +17,9 @@ check_auth();
           <a class="btn btn-default btn-block" onclick="loadVoucherData(1)">Voucher Info</a>
           <a class="btn btn-default btn-block" onclick="loadPayment()">Payment Type</a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-8">
           <div id="info-area"></div>
         </div>
-        <div class="col-md-4"></div>
       </div>
     </div>
     <!-- /.container-fluid -->
@@ -43,7 +42,7 @@ check_auth();
         method: 'post',
         body: formData
       })
-      .then(resp => resp.data())
+      .then(resp => resp.text())
       .catch()
   }
   //load voucher data
@@ -60,7 +59,7 @@ check_auth();
         method: 'post',
         body: formData
       })
-      .then(resp => resp.data())
+      .then(resp => resp.text())
       .catch()
   }
   //load payment type
@@ -69,6 +68,31 @@ check_auth();
       .then(resp => resp.text())
       .then(data => document.getElementById('info-area').innerHTML = data)
       .catch()
+  }
+  //update payment type
+  function payment_update() {
+    const formData = new FormData(document.getElementById('payment-type-id'));
+    fetch('/_server/payment_data.php', {
+        method: 'post',
+        body: formData
+      })
+      .then(resp => resp.text())
+      .then(data => document.getElementById('info-area').innerHTML = data)
+      .catch();
+      clear_form();
+  }
+  //get data to edit
+  function edit(id) {
+    fetch("/_server/payment_data.php?id=" + id)
+      .then(resp => resp.text())
+      .then(data => document.getElementById('info-area').innerHTML = data)
+      .catch()
+  }
+  //edit form clear
+  function clear_form() {
+    document.getElementById('pay_id').value = "";
+    document.getElementById('name_id').value = "";
+    document.getElementById('desc_id').value = "";
   }
   //init state
   window.onload = function() {
